@@ -1,0 +1,14 @@
+# post平台相关参数
+Post:
+  cookie: 12345
+  adv_condition: {"groupId":"12345"}
+  host: http://his.huawei.com
+  headers: {"Content-Type":"application/json;charset=UTF-8","Cookie":""}
+  branch: master
+
+# 云空间相关参数
+OneBox:
+  cookie: 12345
+  adv_condition: { "groupId": "12345" }
+  host: http://his.huawei.com
+  headers: { "Content-Type": "application/json;charset=UTF-8","Cookie": "" }

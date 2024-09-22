@@ -13,4 +13,4 @@ z = []
 for item in x.items():
     print(item,type(item))
 
-print(777)
+print(666)

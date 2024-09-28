@@ -26,5 +26,3 @@ git revert：回滚，简单理解，就是蝴蝶效应修正自己的过去，�
 git reset 和 git revert命令参考以下教程：
 https://blog.csdn.net/qq_43775179/article/details/127572623?ops_request_misc=%257B%2522request%255Fid%2522%253A%25225F7C752B-F30C-4AFB-9E82-0B9C84971E0D%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=5F7C752B-F30C-4AFB-9E82-0B9C84971E0D&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-2-127572623-null-null.142^v100^pc_search_result_base8&utm_term=git%20reset&spm=1018.2226.3001.4187
 """
-
-测试11

@@ -1,4 +1,4 @@
-from api.api import API
+from api import API
 class PostAW():
     def getCdMicrioserviceApi(self, productId, micrioserviceName):
         """创建AW-自动生成API:获取yaml文档有哪些未生成AW"""
@@ -11,5 +11,5 @@ class PostAW():
         """创建AW-自动生成API:生成AW"""
         method = 'POST'
         uri = f'/msa/createApiDesignAw'
-        body = {"apiList":apiList,"baseUrl":"",,"nameRule":"summary"}
+        body = {"apiList":apiList,"baseUrl":"","nameRule":"summary"}
         return API(self.host, method, self.headers, uri, body).send_request()

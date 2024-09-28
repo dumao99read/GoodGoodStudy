@@ -1,10 +1,11 @@
 import os
+
 import yaml
 import pandas as pd
 
 
 os.environ["HOME_PATH"] = os.getcwd().split("GoodGoodStudy")[0]
-ROOT_PATH = os.path.join(os.environ.get["HOME_PATH"],"GoodGoodStudy")
+ROOT_PATH = os.path.join(os.environ.get("HOME_PATH"),"GoodGoodStudy")
 class YamlConifg:
     """读取Yaml配置"""
     def __init__(self, filepath='config/config.yaml'):

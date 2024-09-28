@@ -7,8 +7,7 @@ Post:
   branch: master
 
 # 云空间相关参数
-OneBox:
-  cookie: 12345
-  adv_condition: { "groupId": "12345" }
-  host: http://his.huawei.com
-  headers: { "Content-Type": "application/json;charset=UTF-8","Cookie": "" }
+Douban:
+  cookie: ll="118254"; bid=zxxoTPji-dc; __gads=ID=acc82e8bd5180569:T=1715439468:RT=1715439468:S=ALNI_Mb4HIoRyNIobCrezbPWMxEepWGyuw; __gpi=UID=00000e1837f20511:T=1715439468:RT=1715439468:S=ALNI_MbQ3FEk7xujU7LfM9OylEcrUtcQUA; __eoi=ID=06f494af72d86632:T=1715439468:RT=1715439468:S=AA-AfjYua2OqAHmiInEq_bCXK7Qj; ap_v=0,6.0; __utmc=30149280; __utmz=30149280.1727480703.2.2.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; __utma=30149280.1793393919.1715439455.1727480703.1727483206.3; __utmt=1; __utmb=30149280.1.10.1727483206
+  host: https://m.douban.com
+  headers: {"Referer": "https://www.douban.com/search?q=1234",'user-agent':'Mozilla/5.0'}

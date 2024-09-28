@@ -13,7 +13,8 @@ git push # 将本地仓库最新代码推送到远程仓库
 """
 
 git stash # 将工作区的新增/修改添加到暂存区，可以多次反复添加
+git stash save "" # 相比上一步，多加了注释功能，方便识别。
 git stash list # 查看暂存区的历史记录列表
-git stash clear # 清空暂存区的所有内容
+git stash clear # 清空暂存区的所有内容，注意git add .的记录也会清除哦
 git stash pop # 从暂存区取出最后一次的记录（取出后历史记录就没有这一条了）
 git stash apply stash@ # 从暂存区应用某次记录(应用后历史记录还在)

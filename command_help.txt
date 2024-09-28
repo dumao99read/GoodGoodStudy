@@ -1,0 +1,19 @@
+pip freeze > requirements.txt # 自动生成/更新requirements文件
+pip install -r requirements.txt # 自动安装依赖库
+pip install xlwings==0.32.2 # 安装指定版本的第三方库
+
+git add . # 将工作区的新增/修改添加到缓存区
+git commit -m "" # 将缓存区记录的新增/修改提交到本地仓库
+git push # 将本地仓库最新代码推送到远程仓库
+
+"""
+如果本地是个人仓，push之前先从远程master仓库pull拉取最新代码。
+这样即使出现代码冲突，也可以在pycharm客户端通过工具解决冲突，然后再push到个人远程仓。
+这个时候还需要在远程服务器新建合并请求，审批合入。
+"""
+
+git stash # 将工作区的新增/修改添加到暂存区，可以多次反复添加
+git stash list # 查看暂存区的历史记录列表
+git stash clear # 清空暂存区的所有内容
+git stash pop # 从暂存区取出最后一次的记录（取出后历史记录就没有这一条了）
+git stash apply stash@ # 从暂存区应用某次记录(应用后历史记录还在)

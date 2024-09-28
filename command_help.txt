@@ -16,8 +16,8 @@ git stash # 将工作区的新增/修改添加到暂存区，可以多次反复�
 git stash save "" # 相比上一步，多加了注释功能，方便识别1。
 git stash list # 查看暂存区的历史记录列表
 git stash clear # 清空暂存区的所有内容，注意git add .的记录也会清除哦
-git stash pop # 从暂存区取出最后一次的记录（取出后历史记录就没有这一条了）
-git stash apply stash@ # 从暂存区应用某次记录(应用后历史记录还在)
+git stash pop # 从暂存区取出一次的记录,可选参数不输入就默认取最后一次（取出后历史记录就没有这一条了）
+git stash apply n # 从暂存区应用某次记录,n代表序号如1，2，3(应用后历史记录还在)
 
 """
 git reset:重置，简单理解，就是穿越时光重返旧年代，重新生活一次。修改代码以后用到git push -f将本地代码

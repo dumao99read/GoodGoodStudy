@@ -20,20 +20,20 @@ class Son(Father, Mother):
     def __init__(self, name, sex, ability, job='程序员'):
         Father.__init__(self, name, sex)
         Mother.__init__(self, name, ability)
-        self.job = job
+        self.job2 = job
 
     def fangfa3(self):
-        print('儿子姓:{},性别是{},能力是{},职业是{}'.format(self.name, self.sex, self.ability, self.job))
+        print('儿子姓:{},性别是{},能力是{},职业是{}'.format(self.name, self.sex, self.ability, self.job2))
 
 class Daughter(Mother,Father):
-    def __init__(self, name, ability, sex1='女', job='测试'):
+    def __init__(self, name, ability, sex='女', job='测试'):
         Father.__init__(self, name)
         Mother.__init__(self, name, ability)
-        self.sex1 = sex1
+        self.sex = sex
         self.job = job
 
     def fangfa3(self):
-        print('女儿姓:{},性别是{},能力是{},职业是{}'.format(self.name, self.sex1, self.ability, self.job))
+        print('女儿姓:{},性别是{},能力是{},职业是{}'.format(self.name, self.sex, self.ability, self.job))
 
 a = Son('刘','男','写代码')
 b = Daughter('刘','鼠标点点点')

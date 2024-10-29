@@ -26,11 +26,17 @@ class YingShe():
         for key,values in res.items():
             for value in values:
                 if value == int(CURR_DAY):
+                    print('key',key)
                     return key
 
     def get_period(self):
         period_id = self.get_week()
-        period_value = period_id + '_' + CURR_DAY
+        if str(period_id) == str(CURR_MONTH):
+            pass
+        else:
+            CURR_MONTH = period_id
+            period_id = self.get_week()
+        period_value = str(period_id) + '_' + CURR_DAY
         return period_id,period_value
 
 

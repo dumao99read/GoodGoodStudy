@@ -1,3 +1,4 @@
-x = 0
-x = x % 2
-print(x)
+x = 3
+y = '4'
+if x == y:
+    print(666)

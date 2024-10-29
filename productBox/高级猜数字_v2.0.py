@@ -16,11 +16,12 @@ class GuessNumber:
     cls_length = 4
     cls_times = 8
 
-    def __init__(self, target_number='', guess_number='', length=cls_length, times=cls_times):
+    def __init__(self, target_number='', guess_number=''):
         self.target_numer = target_number # 目标值
         self.guess_number = guess_number  # 竞猜值
-        self.length = length  # 竞猜的数字长度
-        self.times = times  # 竞猜次数
+        # 将类属性赋值给实例属性，好处是更新类属性值后，下一个实例的初始属性跟着变化，达到设置游戏参数的效果。
+        self.length = GuessNumber.cls_length  # 竞猜的数字长度
+        self.times = GuessNumber.cls_times  # 竞猜次数
 
     # 展示游戏菜单
     def show_game_menu(self):
@@ -34,7 +35,7 @@ class GuessNumber:
                   如果所有数字都没有猜对，记作0A0B。
                 ③请充分利用数字不能重复和系统返回的猜数字结果，猜想你心中的答案吧。祝你好运！""".format(self.length,self.times))
         print("""
-            1,开始游戏
+            1，开始游戏
             2，游戏设置
             3，退出游戏
         """)
@@ -53,9 +54,13 @@ class GuessNumber:
     def control_game(self):
         GuessNumber.cls_length = int(input('请输入竞猜数字长度(3~5之间)：'))
         GuessNumber.cls_times = int(input('请输入竞猜次数（1~10之间）：'))
-        self.length = GuessNumber.cls_length
-        self.times = GuessNumber.cls_times
-        self.show_game_menu()
+        # self.length = GuessNumber.cls_length
+        # self.times = GuessNumber.cls_times
+        # self.show_game_menu()
+        # 重启实例
+        game = GuessNumber()
+        game.show_game_menu()
+
 
     # 生成数字不能重复的目标数字
     def create_target_number(self):
@@ -106,9 +111,9 @@ class GuessNumber:
             info = self.check_result(res, self.input_guess_number())
             self.times -= 1
             print('此次竞猜结果为:{},你还剩下{}次机会'.format(info,self.times))
-        if self.times == 0:
+        if self.times == 0 and info != '{}A0B'.format(self.length):
             print('很抱歉，你输了,正确答案是：{}'.format(self.target_number))
-        if info == '{}A0B'.format(self.length):
+        else:
             print('恭喜你答对了！')
         time.sleep(1.5)
         game = GuessNumber()

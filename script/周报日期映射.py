@@ -13,7 +13,7 @@ class YingShe():
         self.file = os.path.join(CURR_PATH, '../data/周映射表.xlsx')
 
     def create_diction(self):
-        db = pd.read_excel(self.file)
+        db = pd.read_excel(self.file,sheet_name=CURR_MONTH)
         dict_yingshe = {}
         for item in db:
             period = item

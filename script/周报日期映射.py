@@ -31,7 +31,8 @@ class YingShe():
 
     def get_period(self):
         period_id = self.get_week()
-        if str(period_id) == str(CURR_MONTH):
+        global CURR_MONTH # 全局变量可以直接使用，但是想改动全局变量，必须在方法中先声明。
+        if str(period_id)[0] == 'W':
             pass
         else:
             CURR_MONTH = period_id

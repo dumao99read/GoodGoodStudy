@@ -30,3 +30,7 @@ https://blog.csdn.net/qq_43775179/article/details/127572623?ops_request_misc=%25
 ui转换成py命令：
 pyuic5 guessNumberWindow.ui -o guessNumberWindow.py
 pyuic5 guessNumberWindow.ui -o guessNumberWindow.py -x   --会自动加Main代码
+
+打包命令：
+-w：隐藏控制台；-F：单文件模式；-D：文件夹模式
+pyinstaller -w -F guessNumberService.py   -- 打包成可执行文件

@@ -16,25 +16,33 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from guessNumberWindow import Ui_MainWindow
 
 
-class GuessNumber(Ui_MainWindow):
-    cls_length = 4
-    cls_times = 8
+class GuessNumber(Ui_MainWindow, QtWidgets.QMainWindow):
 
     def __init__(self, target_number='', guess_number=''):
-        super(Ui_MainWindow, self).__init__()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
+        super().__init__()
+        self.setupUi(self)
 
         self.target_numer = target_number  # 目标值
         self.guess_number = guess_number  # 竞猜值
-        # 将类属性赋值给实例属性，好处是更新类属性值后，下一个实例的初始属性跟着变化，达到设置游戏参数的效果。
-        self.length = GuessNumber.cls_length  # 竞猜的数字长度
-        self.times = GuessNumber.cls_times  # 竞猜次数
+        self.length = self.spinBox_length.value()  # 游戏竞猜数字长度
+        self.times = self.spinBox_times.value()  # 游戏竞猜次数
 
+        self.initUI()
+
+
+    def initUI(self):
         # 信号槽链接
-        self.pushButton_start.clicked.connect(self.run)
-        self.pushButton_control.clicked.connect(self.control_game)
-        self.pushButton_confirm.clicked.connect(self.input_guess_number)
+        self.pushButton_start.clicked.connect(self.start_game)  # 开始游戏
+        self.action_start.triggered.connect(self.start_game)
+        self.pushButton_control.clicked.connect(self.set_game)  # 游戏设置
+
+        # self.pushButton_control.setEnabled(False)
+        self.pushButton_exit.clicked.connect(self.exit_game)  # 退出游戏
+        self.action_exit.triggered.connect(self.exit_game)
+
+
+        self.pushButton_confirm.clicked.connect(self.confirem_and_check_result)  # 输入确认
+        self.pushButton_confirm_2.clicked.connect(self.control_game)  # 设置确定
 
     # 展示游戏菜单
     def show_game_menu(self):
@@ -66,14 +74,19 @@ class GuessNumber(Ui_MainWindow):
 
     # 控制游戏参数
     def control_game(self):
-        GuessNumber.cls_length = int(input('请输入竞猜数字长度(3~5之间)：'))
-        GuessNumber.cls_times = int(input('请输入竞猜次数（1~10之间）：'))
-        # self.length = GuessNumber.cls_length
-        # self.times = GuessNumber.cls_times
-        # self.show_game_menu()
-        # 重启实例
-        game = GuessNumber()
-        game.show_game_menu()
+        self.length = self.spinBox_length.text()
+        self.times = self.spinBox_times.text()
+
+        self.spinBox_length.setEnabled(False)
+        self.spinBox_times.setEnabled(False)
+        self.pushButton_confirm_2.setEnabled(False)
+
+        # 退出游戏设置时，重新开启游戏开始的按钮
+        self.lineEdit.setEnabled(False)
+        self.pushButton_confirm.setEnabled(False)
+        self.pushButton_start.setEnabled(True)
+
+
 
     # 生成数字不能重复的目标数字
     def create_target_number(self):
@@ -85,24 +98,21 @@ class GuessNumber(Ui_MainWindow):
 
     # 输入合理的竞猜数字
     def input_guess_number(self):
-        check = True
-        while check == True:
-            self.guess_number = input("请输入0-9的{}个不重复数字：".format(self.length))
             self.guess_number = self.lineEdit.text()
-            num_list = list(self.guess_number)
-            num_set = set(self.guess_number)
-            if self.guess_number.isdigit() == False:
-                print("输入的不是纯数字，无法评估。请重新输入！")
-                continue
-            elif len(str(self.guess_number)) != self.length:
-                print("输入长度有误，无法评估。请重新输入！")
-                continue
-            elif len(num_list) != len(num_set):
-                print("有重复数字，无法评估。请重新输入！")
-                continue
+            if not self.guess_number:
+                print('输入为空，请重新输入！')
+                self.lineEdit.setText('输入为空，请重新输入！')
             else:
-                check = False
-                return self.guess_number
+                num_list = list(self.guess_number)
+                num_set = set(self.guess_number)
+                if self.guess_number.isdigit() == False:
+                    self.lineEdit.setText('输入的不是纯数字，无法评估。请重新输入！')
+                elif len(str(self.guess_number)) != self.length:
+                    self.lineEdit.setText('输入长度有误，无法评估。请重新输入！')
+                elif len(num_list) != len(num_set):
+                    self.lineEdit.setText('有重复数字，无法评估。请重新输入！')
+                else:
+                    return self.guess_number
 
     # 判断竞猜结果
     def check_result(self, target_number, input_number):
@@ -118,31 +128,60 @@ class GuessNumber(Ui_MainWindow):
                     count_b += 1
         return '{}A{}B'.format(count_a, count_b)
 
-    def run(self):
-        print('开始游戏！！！')
-        self.pushButton_confirm.setEnabled(False)
-        # res = self.create_target_number()
-        # info = ''
-        # while self.times != 0 and info != '{}A0B'.format(self.length):
-        #     info = self.check_result(res, self.input_guess_number())
-        #     self.times -= 1
-        #     print('此次竞猜结果为:{},你还剩下{}次机会'.format(info,self.times))
-        # if self.times == 0 and info != '{}A0B'.format(self.length):
-        #     print('很抱歉，你输了,正确答案是：{}'.format(self.target_number))
-        # else:
-        #     print('恭喜你答对了！')
-        # time.sleep(1.5)
-        # game = GuessNumber()
-        # game.show_game_menu()
+    def start_game(self):
+        self.pushButton_start.setEnabled(False)
+        self.pushButton_confirm.setEnabled(True)
+        self.lineEdit.clear()
+        self.lineEdit.setEnabled(True)
+        self.textEdit.clear()
+        self.textEdit.setEnabled(True)
+
+        self.times = self.spinBox_times.value()
+        self.create_target_number()  # 创建目标随机数
+        self.textEdit.setText('游戏开始！您还有{}次机会'.format(self.times))
+
+    def set_game(self):
+        self.pushButton_start.setEnabled(False)
+        self.lineEdit.clear()
+        self.lineEdit.setEnabled(False)
+        self.textEdit.clear()
+        self.textEdit.setEnabled(False)
+        self.lineEdit.setEnabled(False)
+        self.textEdit.setEnabled(False)
+
+        self.pushButton_confirm_2.setEnabled(True)
+        self.spinBox_length.setEnabled(True)
+        self.spinBox_times.setEnabled(True)
+
+    def exit_game(self):
+        sys.exit()
+
+    def confirem_and_check_result(self):
+        self.input_guess_number()
+        self.times -= 1
+        info = self.check_result(self.target_number, self.guess_number)  # 判断竞猜结果
+        if self.times != 0 and info != '{}A0B'.format(self.length):
+            self.textEdit.append('{}的检查结果为:{},你还剩下{}次机会'.format(self.guess_number, info, self.times))
+        elif self.times == 0 and info != '{}A0B'.format(self.length):
+            self.textEdit.append('很抱歉，你输了,正确答案是：{}'.format(self.target_number))
+            self.textEdit.append('\n请点击游戏菜单退出or重新开始！' * 3)
+            self.lineEdit.setEnabled(False)
+            self.pushButton_confirm.setEnabled(False)
+            self.pushButton_start.setEnabled(True)
+        else:
+            self.textEdit.append('{}的检查结果为:{}。恭喜你答对了！'.format(self.guess_number, info))
+            self.textEdit.append('\n请点击游戏菜单退出or重新开始！' * 3)
+            self.lineEdit.setEnabled(False)
+            self.pushButton_confirm.setEnabled(False)
+            self.pushButton_start.setEnabled(True)
+
+        self.lineEdit.clear()
+
 
 
 if __name__ == '__main__':
-    # game = GuessNumber()
-    # game.show_game_menu()
-
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
-    ui = GuessNumber()
-    ui.show()
+    win = GuessNumber()
+    win.show()
     sys.exit(app.exec_())

@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class guessNumberUI(object):
+class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
@@ -124,3 +124,13 @@ class guessNumberUI(object):
         self.pushButton_control.setText(_translate("MainWindow", "游戏设置"))
         self.pushButton_exit.setText(_translate("MainWindow", "退出游戏"))
         self.menu.setTitle(_translate("MainWindow", "猜数字"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())

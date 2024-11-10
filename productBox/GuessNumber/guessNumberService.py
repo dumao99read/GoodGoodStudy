@@ -10,18 +10,31 @@ Remark:
 
 import random
 import time
+import sys
 
-class GuessNumber:
+from PyQt5 import QtCore, QtGui, QtWidgets
+from guessNumberWindow import Ui_MainWindow
 
+
+class GuessNumber(Ui_MainWindow):
     cls_length = 4
     cls_times = 8
 
     def __init__(self, target_number='', guess_number=''):
-        self.target_numer = target_number # 目标值
+        super(Ui_MainWindow, self).__init__()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+
+        self.target_numer = target_number  # 目标值
         self.guess_number = guess_number  # 竞猜值
         # 将类属性赋值给实例属性，好处是更新类属性值后，下一个实例的初始属性跟着变化，达到设置游戏参数的效果。
         self.length = GuessNumber.cls_length  # 竞猜的数字长度
         self.times = GuessNumber.cls_times  # 竞猜次数
+
+        # 信号槽链接
+        self.pushButton_start.clicked.connect(self.run)
+        self.pushButton_control.clicked.connect(self.control_game)
+        self.pushButton_confirm.clicked.connect(self.input_guess_number)
 
     # 展示游戏菜单
     def show_game_menu(self):
@@ -33,7 +46,8 @@ class GuessNumber:
                   A的优先级比B高（意思就是已经记作A的数字，不会再统计B）
                 ②当所有数字和位置都正确时，记作{0}A0B，玩家胜利；当所有数字都正确但位置都错误时，记作0A{0}B；
                   如果所有数字都没有猜对，记作0A0B。
-                ③请充分利用数字不能重复和系统返回的猜数字结果，猜想你心中的答案吧。祝你好运！""".format(self.length,self.times))
+                ③请充分利用数字不能重复和系统返回的猜数字结果，猜想你心中的答案吧。祝你好运！""".format(self.length,
+                                                                                                     self.times))
         print("""
             1，开始游戏
             2，游戏设置
@@ -61,7 +75,6 @@ class GuessNumber:
         game = GuessNumber()
         game.show_game_menu()
 
-
     # 生成数字不能重复的目标数字
     def create_target_number(self):
         num_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -75,6 +88,7 @@ class GuessNumber:
         check = True
         while check == True:
             self.guess_number = input("请输入0-9的{}个不重复数字：".format(self.length))
+            self.guess_number = self.lineEdit.text()
             num_list = list(self.guess_number)
             num_set = set(self.guess_number)
             if self.guess_number.isdigit() == False:
@@ -91,7 +105,7 @@ class GuessNumber:
                 return self.guess_number
 
     # 判断竞猜结果
-    def check_result(self,target_number,input_number):
+    def check_result(self, target_number, input_number):
         count_a = 0
         count_b = 0
         list_target = list(target_number)
@@ -102,26 +116,33 @@ class GuessNumber:
                     count_a += 1
                 else:
                     count_b += 1
-        return '{}A{}B'.format(count_a,count_b)
+        return '{}A{}B'.format(count_a, count_b)
 
     def run(self):
-        res = self.create_target_number()
-        info = ''
-        while self.times != 0 and info != '{}A0B'.format(self.length):
-            info = self.check_result(res, self.input_guess_number())
-            self.times -= 1
-            print('此次竞猜结果为:{},你还剩下{}次机会'.format(info,self.times))
-        if self.times == 0 and info != '{}A0B'.format(self.length):
-            print('很抱歉，你输了,正确答案是：{}'.format(self.target_number))
-        else:
-            print('恭喜你答对了！')
-        time.sleep(1.5)
-        game = GuessNumber()
-        game.show_game_menu()
+        print('开始游戏！！！')
+        self.pushButton_confirm.setEnabled(False)
+        # res = self.create_target_number()
+        # info = ''
+        # while self.times != 0 and info != '{}A0B'.format(self.length):
+        #     info = self.check_result(res, self.input_guess_number())
+        #     self.times -= 1
+        #     print('此次竞猜结果为:{},你还剩下{}次机会'.format(info,self.times))
+        # if self.times == 0 and info != '{}A0B'.format(self.length):
+        #     print('很抱歉，你输了,正确答案是：{}'.format(self.target_number))
+        # else:
+        #     print('恭喜你答对了！')
+        # time.sleep(1.5)
+        # game = GuessNumber()
+        # game.show_game_menu()
+
 
 if __name__ == '__main__':
-    game = GuessNumber()
-    game.show_game_menu()
+    # game = GuessNumber()
+    # game.show_game_menu()
 
+    import sys
 
-
+    app = QtWidgets.QApplication(sys.argv)
+    ui = GuessNumber()
+    ui.show()
+    sys.exit(app.exec_())

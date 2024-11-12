@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>猜数字</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="img.qrc">
+    <normaloff>:/img/img/qq.png</normaloff>:/img/img/qq.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="Line" name="line">
     <property name="geometry">
@@ -404,6 +408,8 @@ font: 12pt &quot;Agency FB&quot;;</string>
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="img.qrc"/>
+ </resources>
  <connections/>
 </ui>

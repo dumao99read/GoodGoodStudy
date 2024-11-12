@@ -13,10 +13,10 @@ import time
 import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from guessNumberWindow import Ui_MainWindow
+from guessNumberWindow import Ui_GuessNumber
 
 
-class GuessNumber(Ui_MainWindow, QtWidgets.QMainWindow):
+class GuessNumber(Ui_GuessNumber, QtWidgets.QMainWindow):
 
     def __init__(self, target_number='', guess_number=''):
         super().__init__()
@@ -74,8 +74,8 @@ class GuessNumber(Ui_MainWindow, QtWidgets.QMainWindow):
 
     # 控制游戏参数
     def control_game(self):
-        self.length = self.spinBox_length.text()
-        self.times = self.spinBox_times.text()
+        self.length = self.spinBox_length.value()  # 游戏竞猜数字长度
+        self.times = self.spinBox_times.value()  # 游戏竞猜次数
 
         self.spinBox_length.setEnabled(False)
         self.spinBox_times.setEnabled(False)
@@ -133,21 +133,22 @@ class GuessNumber(Ui_MainWindow, QtWidgets.QMainWindow):
         self.pushButton_confirm.setEnabled(True)
         self.lineEdit.clear()
         self.lineEdit.setEnabled(True)
-        self.textEdit.clear()
-        self.textEdit.setEnabled(True)
+        self.textBrowser.clear()
+        self.textBrowser.setEnabled(True)
 
         self.times = self.spinBox_times.value()
         self.create_target_number()  # 创建目标随机数
-        self.textEdit.setText('游戏开始！您还有{}次机会'.format(self.times))
+        self.lineEdit.setPlaceholderText('')
+        self.textBrowser.setText('游戏开始！您还有{}次机会'.format(self.times))
 
     def set_game(self):
         self.pushButton_start.setEnabled(False)
         self.lineEdit.clear()
         self.lineEdit.setEnabled(False)
-        self.textEdit.clear()
-        self.textEdit.setEnabled(False)
+        self.textBrowser.clear()
+        self.textBrowser.setEnabled(False)
         self.lineEdit.setEnabled(False)
-        self.textEdit.setEnabled(False)
+        self.textBrowser.setEnabled(False)
 
         self.pushButton_confirm_2.setEnabled(True)
         self.spinBox_length.setEnabled(True)
@@ -161,16 +162,16 @@ class GuessNumber(Ui_MainWindow, QtWidgets.QMainWindow):
         self.times -= 1
         info = self.check_result(self.target_number, self.guess_number)  # 判断竞猜结果
         if self.times != 0 and info != '{}A0B'.format(self.length):
-            self.textEdit.append('{}的检查结果为:{},你还剩下{}次机会'.format(self.guess_number, info, self.times))
+            self.textBrowser.append('{}的检查结果为:{},你还剩下{}次机会'.format(self.guess_number, info, self.times))
         elif self.times == 0 and info != '{}A0B'.format(self.length):
-            self.textEdit.append('很抱歉，你输了,正确答案是：{}'.format(self.target_number))
-            self.textEdit.append('\n请点击游戏菜单退出or重新开始！' * 3)
+            self.textBrowser.append('很抱歉，你输了,正确答案是：{}'.format(self.target_number))
+            self.textBrowser.append('\n请点击游戏菜单退出or重新开始！' * 3)
             self.lineEdit.setEnabled(False)
             self.pushButton_confirm.setEnabled(False)
             self.pushButton_start.setEnabled(True)
         else:
-            self.textEdit.append('{}的检查结果为:{}。恭喜你答对了！'.format(self.guess_number, info))
-            self.textEdit.append('\n请点击游戏菜单退出or重新开始！' * 3)
+            self.textBrowser.append('{}的检查结果为:{}。恭喜你答对了！'.format(self.guess_number, info))
+            self.textBrowser.append('\n请点击游戏菜单退出or重新开始！' * 3)
             self.lineEdit.setEnabled(False)
             self.pushButton_confirm.setEnabled(False)
             self.pushButton_start.setEnabled(True)

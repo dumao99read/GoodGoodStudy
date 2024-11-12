@@ -11,11 +11,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+class Ui_GuessNumber(object):
+    def setupUi(self, GuessNumber):
+        GuessNumber.setObjectName("GuessNumber")
+        GuessNumber.resize(800, 600)
+        self.centralwidget = QtWidgets.QWidget(GuessNumber)
         self.centralwidget.setObjectName("centralwidget")
         self.line = QtWidgets.QFrame(self.centralwidget)
         self.line.setGeometry(QtCore.QRect(100, 50, 661, 20))
@@ -62,11 +62,6 @@ class Ui_MainWindow(object):
         self.lineEdit.setGeometry(QtCore.QRect(400, 150, 221, 21))
         self.lineEdit.setText("")
         self.lineEdit.setObjectName("lineEdit")
-        self.textEdit = QtWidgets.QTextEdit(self.centralwidget)
-        self.textEdit.setEnabled(False)
-        self.textEdit.setGeometry(QtCore.QRect(400, 190, 291, 121))
-        self.textEdit.setPlaceholderText("")
-        self.textEdit.setObjectName("textEdit")
         self.pushButton_confirm = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_confirm.setEnabled(False)
         self.pushButton_confirm.setGeometry(QtCore.QRect(630, 150, 61, 23))
@@ -126,21 +121,24 @@ class Ui_MainWindow(object):
         self.line_7.setFrameShape(QtWidgets.QFrame.HLine)
         self.line_7.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_7.setObjectName("line_7")
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.textBrowser = QtWidgets.QTextBrowser(self.centralwidget)
+        self.textBrowser.setGeometry(QtCore.QRect(400, 190, 291, 121))
+        self.textBrowser.setObjectName("textBrowser")
+        GuessNumber.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(GuessNumber)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 23))
         self.menubar.setObjectName("menubar")
         self.menu = QtWidgets.QMenu(self.menubar)
         self.menu.setObjectName("menu")
         self.menu_2 = QtWidgets.QMenu(self.menubar)
         self.menu_2.setObjectName("menu_2")
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        GuessNumber.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(GuessNumber)
         self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
-        self.action_start = QtWidgets.QAction(MainWindow)
+        GuessNumber.setStatusBar(self.statusbar)
+        self.action_start = QtWidgets.QAction(GuessNumber)
         self.action_start.setObjectName("action_start")
-        self.action_exit = QtWidgets.QAction(MainWindow)
+        self.action_exit = QtWidgets.QAction(GuessNumber)
         self.action_exit.setObjectName("action_exit")
         self.menu.addAction(self.action_start)
         self.menu.addAction(self.action_exit)
@@ -148,13 +146,13 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu.menuAction())
         self.menubar.addAction(self.menu_2.menuAction())
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.retranslateUi(GuessNumber)
+        QtCore.QMetaObject.connectSlotsByName(GuessNumber)
 
-    def retranslateUi(self, MainWindow):
+    def retranslateUi(self, GuessNumber):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label.setText(_translate("MainWindow", "游戏规则说明：\n"
+        GuessNumber.setWindowTitle(_translate("GuessNumber", "MainWindow"))
+        self.label.setText(_translate("GuessNumber", "游戏规则说明：\n"
 "1）从0~9中选取X个不重复的数字，视为猜数字，一共有Y次竞猜机会（X,Y可以在游戏设置中调整）；\n"
 "2）每猜一次，系统会返回当前猜数字的结果，用A和B来代替，以下以X=4来举例：\n"
 "①如果有一个数字和位置都猜对了，记作1A，如果有一个数字猜对了但位置错了，记作1B，\n"
@@ -162,29 +160,31 @@ class Ui_MainWindow(object):
 " ②当所有数字和位置都正确时，记作4A0B，玩家胜利；当所有数字都正确但位置都错误时，记作0A4B；\n"
 "如果所有数字都没有猜对，记作0A0B。\n"
 "③请充分利用数字不能重复和系统返回的猜数字结果，猜想你心中的答案吧。祝你好运！"))
-        self.label_2.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#000000;\">输入内容</span></p></body></html>"))
-        self.label_3.setText(_translate("MainWindow", "显示结果"))
-        self.lineEdit.setToolTip(_translate("MainWindow", "<html><head/><body><p>请先点击“开始游戏”</p></body></html>"))
-        self.pushButton_confirm.setWhatsThis(_translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">确定</span></p></body></html>"))
-        self.pushButton_confirm.setText(_translate("MainWindow", "确定"))
-        self.pushButton_start.setText(_translate("MainWindow", "开始游戏"))
-        self.pushButton_control.setText(_translate("MainWindow", "游戏设置"))
-        self.pushButton_exit.setText(_translate("MainWindow", "退出游戏"))
-        self.label_4.setText(_translate("MainWindow", "<html><head/><body><p>竞猜长度（3~5）</p></body></html>"))
-        self.label_5.setText(_translate("MainWindow", "<html><head/><body><p>竞猜次数（1~10）</p></body></html>"))
-        self.pushButton_confirm_2.setWhatsThis(_translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">确定</span></p></body></html>"))
-        self.pushButton_confirm_2.setText(_translate("MainWindow", "确认"))
-        self.menu.setTitle(_translate("MainWindow", "猜数字"))
-        self.menu_2.setTitle(_translate("MainWindow", "关于"))
-        self.action_start.setText(_translate("MainWindow", "开始"))
-        self.action_exit.setText(_translate("MainWindow", "退出"))
+        self.label_2.setText(_translate("GuessNumber", "<html><head/><body><p><span style=\" color:#000000;\">输入内容</span></p></body></html>"))
+        self.label_3.setText(_translate("GuessNumber", "显示结果"))
+        self.lineEdit.setToolTip(_translate("GuessNumber", "<html><head/><body><p>请先点击“开始游戏”</p></body></html>"))
+        self.lineEdit.setPlaceholderText(_translate("GuessNumber", "点击开始游戏后输入数字..."))
+        self.pushButton_confirm.setWhatsThis(_translate("GuessNumber", "<html><head/><body><p><span style=\" font-weight:600;\">确定</span></p></body></html>"))
+        self.pushButton_confirm.setText(_translate("GuessNumber", "确定"))
+        self.pushButton_start.setText(_translate("GuessNumber", "开始游戏"))
+        self.pushButton_control.setText(_translate("GuessNumber", "游戏设置"))
+        self.pushButton_exit.setText(_translate("GuessNumber", "退出游戏"))
+        self.label_4.setText(_translate("GuessNumber", "<html><head/><body><p>竞猜长度（3~5）</p></body></html>"))
+        self.label_5.setText(_translate("GuessNumber", "<html><head/><body><p>竞猜次数（1~10）</p></body></html>"))
+        self.pushButton_confirm_2.setWhatsThis(_translate("GuessNumber", "<html><head/><body><p><span style=\" font-weight:600;\">确定</span></p></body></html>"))
+        self.pushButton_confirm_2.setText(_translate("GuessNumber", "确认"))
+        self.textBrowser.setPlaceholderText(_translate("GuessNumber", "这里显示竞猜结果..."))
+        self.menu.setTitle(_translate("GuessNumber", "猜数字"))
+        self.menu_2.setTitle(_translate("GuessNumber", "关于"))
+        self.action_start.setText(_translate("GuessNumber", "开始"))
+        self.action_exit.setText(_translate("GuessNumber", "退出"))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
+    GuessNumber = QtWidgets.QMainWindow()
+    ui = Ui_GuessNumber()
+    ui.setupUi(GuessNumber)
+    GuessNumber.show()
     sys.exit(app.exec_())

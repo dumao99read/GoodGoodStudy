@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>GuessNumber</class>
+ <widget class="QMainWindow" name="GuessNumber">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -159,21 +159,8 @@ A的优先级比B高（意思就是已经记作A的数字，不会再统计B）
     <property name="text">
      <string/>
     </property>
-   </widget>
-   <widget class="QTextEdit" name="textEdit">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>400</x>
-      <y>190</y>
-      <width>291</width>
-      <height>121</height>
-     </rect>
-    </property>
     <property name="placeholderText">
-     <string/>
+     <string>点击开始游戏后输入数字...</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_confirm">
@@ -364,6 +351,19 @@ font: 12pt &quot;Agency FB&quot;;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="textBrowser">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>190</y>
+      <width>291</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="placeholderText">
+     <string>这里显示竞猜结果...</string>
     </property>
    </widget>
   </widget>

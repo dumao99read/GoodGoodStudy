@@ -1,4 +1,4 @@
-x = 3
-y = '4'
-if x == y:
-    print(666)
+x = [1,2,3]
+x.pop()
+x.pop()
+print(x)

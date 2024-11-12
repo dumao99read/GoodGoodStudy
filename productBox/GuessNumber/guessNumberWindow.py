@@ -151,7 +151,7 @@ class Ui_GuessNumber(object):
 
     def retranslateUi(self, GuessNumber):
         _translate = QtCore.QCoreApplication.translate
-        GuessNumber.setWindowTitle(_translate("GuessNumber", "MainWindow"))
+        GuessNumber.setWindowTitle(_translate("GuessNumber", "猜数字"))
         self.label.setText(_translate("GuessNumber", "游戏规则说明：\n"
 "1）从0~9中选取X个不重复的数字，视为猜数字，一共有Y次竞猜机会（X,Y可以在游戏设置中调整）；\n"
 "2）每猜一次，系统会返回当前猜数字的结果，用A和B来代替，以下以X=4来举例：\n"
@@ -174,7 +174,7 @@ class Ui_GuessNumber(object):
         self.pushButton_confirm_2.setWhatsThis(_translate("GuessNumber", "<html><head/><body><p><span style=\" font-weight:600;\">确定</span></p></body></html>"))
         self.pushButton_confirm_2.setText(_translate("GuessNumber", "确认"))
         self.textBrowser.setPlaceholderText(_translate("GuessNumber", "这里显示竞猜结果..."))
-        self.menu.setTitle(_translate("GuessNumber", "猜数字"))
+        self.menu.setTitle(_translate("GuessNumber", "菜单"))
         self.menu_2.setTitle(_translate("GuessNumber", "关于"))
         self.action_start.setText(_translate("GuessNumber", "开始"))
         self.action_exit.setText(_translate("GuessNumber", "退出"))

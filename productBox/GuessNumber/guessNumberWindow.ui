@@ -160,7 +160,7 @@ A的优先级比B高（意思就是已经记作A的数字，不会再统计B）
      <string/>
     </property>
     <property name="placeholderText">
-     <string>点击开始游戏后输入数字...</string>
+     <string>开始游戏后在这里输入数字...</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_confirm">

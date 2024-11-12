@@ -7,28 +7,30 @@ Project:PycharmProjects
 Remark:
 ===========================
 """
-
+import os.path
 import random
 import time
 import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from guessNumberWindow import Ui_GuessNumber
+from PyQt5.uic import loadUi
 
+CURR_PATH = os.path.dirname(__file__)
 
-class GuessNumber(Ui_GuessNumber, QtWidgets.QMainWindow):
+class GuessNumber(QtWidgets.QMainWindow):
 
     def __init__(self, target_number='', guess_number=''):
         super().__init__()
-        self.setupUi(self)
+        # self.setupUi(self)
+        # 直接加载ui文件，不需要转换成py
+        ui_path = os.path.join(CURR_PATH, "guessNumberWindow.ui")
+        loadUi(ui_path, self)
+        self.initUI()
 
         self.target_numer = target_number  # 目标值
         self.guess_number = guess_number  # 竞猜值
         self.length = self.spinBox_length.value()  # 游戏竞猜数字长度
         self.times = self.spinBox_times.value()  # 游戏竞猜次数
-
-        self.initUI()
-
 
     def initUI(self):
         # 信号槽链接

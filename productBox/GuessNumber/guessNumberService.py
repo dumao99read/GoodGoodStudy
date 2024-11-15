@@ -18,18 +18,21 @@ from PyQt5.uic import loadUi
 from guessNumberWindow import Ui_GuessNumber
 
 CURR_PATH = os.path.dirname(__file__)
+DEBUG = True
 
 class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
 
     def __init__(self, target_number='', guess_number=''):
         super().__init__()
 
-        # 初始化ui界面
-        self.setupUi(self)
-
-        # 直接加载ui文件，好处是不需要转换成py文件直接取用最新设置，坏处是新增控件无法直接联想
-        # ui_path = os.path.join(CURR_PATH, "guessNumberWindow.ui")
-        # loadUi(ui_path, self)
+        # 初始化ui界面，DEBUG为True时不需要转换文件，适合调界面样式；为False时需要转换文件，适合调新增控件
+        if DEBUG:
+            # 直接加载ui文件，好处是不需要转换成py文件直接取用最新设置，坏处是新增控件无法直接联想
+            # 此时虽然继承了guessNumberWindow.py的Ui_GuessNumber类，但是不会使用py文件里面的旧内容
+            ui_path = os.path.join(CURR_PATH, "guessNumberWindow.ui")
+            loadUi(ui_path, self)
+        else:
+            self.setupUi(self)
 
         # 建立信号槽连接
         self.initUI()
@@ -46,12 +49,8 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         self.action_start.triggered.connect(self.start_game)
         self.pushButton_control.clicked.connect(self.set_game)  # 游戏设置
 
-        # self.pushButton_control.setEnabled(False)
         self.pushButton_exit.clicked.connect(self.exit_game)  # 退出游戏
-        print(1,self.pushButton_exit)
         self.action_exit.triggered.connect(self.exit_game)
-        print(2, self.action_exit)
-
 
         self.pushButton_confirm.clicked.connect(self.confirem_and_check_result)  # 输入确认
         self.pushButton_confirm_2.clicked.connect(self.control_game)  # 设置确定
@@ -142,6 +141,7 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         return '{}A{}B'.format(count_a, count_b)
 
     def start_game(self):
+        self.calculate_progress_by_time(0.1,5)
         self.pushButton_start.setEnabled(False)
         self.pushButton_confirm.setEnabled(True)
         self.lineEdit.clear()
@@ -153,6 +153,8 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         self.create_target_number()  # 创建目标随机数
         self.lineEdit.setPlaceholderText('')
         self.textBrowser.setText('游戏开始！您还有{}次机会'.format(self.times))
+
+        time.sleep(1)
         self.progressBar.setValue(0)
 
 
@@ -174,6 +176,9 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         sys.exit()
 
     def calculate_progress(self):
+        """
+        :return: None
+        """
         progress = self.progressBar.value()
         print(progress,type(progress))
         increase_value = math.ceil(1 / int(self.calculate_value) * 100)
@@ -182,6 +187,20 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
             self.progressBar.setValue(progress + increase_value)
         else:
             self.progressBar.setValue(100)
+
+    def calculate_progress_by_time(self,interval,percenting):
+        """
+        :param interval: 进度条渐进时间间隔
+        :param percenting: 进度条加载进度值
+        :return: None
+        """
+        progress = self.progressBar.value()
+        print(progress,type(progress))
+        for i in range(100):
+            time.sleep(interval)
+            self.progressBar.setValue(i * percenting)
+            if self.progressBar.value() == 100 - percenting:
+                return
 
     def confirem_and_check_result(self):
         self.calculate_progress()

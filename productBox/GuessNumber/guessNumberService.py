@@ -11,26 +11,34 @@ import os.path
 import random
 import time
 import sys
+import math
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
+from guessNumberWindow import Ui_GuessNumber
 
 CURR_PATH = os.path.dirname(__file__)
 
-class GuessNumber(QtWidgets.QMainWindow):
+class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
 
     def __init__(self, target_number='', guess_number=''):
         super().__init__()
-        # self.setupUi(self)
-        # 直接加载ui文件，不需要转换成py
-        ui_path = os.path.join(CURR_PATH, "guessNumberWindow.ui")
-        loadUi(ui_path, self)
+
+        # 初始化ui界面
+        self.setupUi(self)
+
+        # 直接加载ui文件，好处是不需要转换成py文件直接取用最新设置，坏处是新增控件无法直接联想
+        # ui_path = os.path.join(CURR_PATH, "guessNumberWindow.ui")
+        # loadUi(ui_path, self)
+
+        # 建立信号槽连接
         self.initUI()
 
         self.target_numer = target_number  # 目标值
         self.guess_number = guess_number  # 竞猜值
         self.length = self.spinBox_length.value()  # 游戏竞猜数字长度
         self.times = self.spinBox_times.value()  # 游戏竞猜次数
+        self.calculate_value = self.spinBox_times.value()  # 进度条计算的除数
 
     def initUI(self):
         # 信号槽链接
@@ -40,7 +48,9 @@ class GuessNumber(QtWidgets.QMainWindow):
 
         # self.pushButton_control.setEnabled(False)
         self.pushButton_exit.clicked.connect(self.exit_game)  # 退出游戏
+        print(1,self.pushButton_exit)
         self.action_exit.triggered.connect(self.exit_game)
+        print(2, self.action_exit)
 
 
         self.pushButton_confirm.clicked.connect(self.confirem_and_check_result)  # 输入确认
@@ -78,6 +88,7 @@ class GuessNumber(QtWidgets.QMainWindow):
     def control_game(self):
         self.length = self.spinBox_length.value()  # 游戏竞猜数字长度
         self.times = self.spinBox_times.value()  # 游戏竞猜次数
+        self.calculate_value = self.spinBox_times.value()  # 除数
 
         self.spinBox_length.setEnabled(False)
         self.spinBox_times.setEnabled(False)
@@ -142,6 +153,8 @@ class GuessNumber(QtWidgets.QMainWindow):
         self.create_target_number()  # 创建目标随机数
         self.lineEdit.setPlaceholderText('')
         self.textBrowser.setText('游戏开始！您还有{}次机会'.format(self.times))
+        self.progressBar.setValue(0)
+
 
     def set_game(self):
         self.pushButton_start.setEnabled(False)
@@ -156,10 +169,23 @@ class GuessNumber(QtWidgets.QMainWindow):
         self.spinBox_length.setEnabled(True)
         self.spinBox_times.setEnabled(True)
 
-    def exit_game(self):
+    def exit_game(self,name):
+        print(name)
         sys.exit()
 
+    def calculate_progress(self):
+        progress = self.progressBar.value()
+        print(progress,type(progress))
+        increase_value = math.ceil(1 / int(self.calculate_value) * 100)
+        print(increase_value,type(increase_value))
+        if progress + increase_value < 100:
+            self.progressBar.setValue(progress + increase_value)
+        else:
+            self.progressBar.setValue(100)
+
     def confirem_and_check_result(self):
+        self.calculate_progress()
+
         self.input_guess_number()
         self.times -= 1
         info = self.check_result(self.target_number, self.guess_number)  # 判断竞猜结果
@@ -179,6 +205,7 @@ class GuessNumber(QtWidgets.QMainWindow):
             self.pushButton_start.setEnabled(True)
 
         self.lineEdit.clear()
+
 
 
 

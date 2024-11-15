@@ -176,9 +176,7 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         sys.exit()
 
     def calculate_progress(self):
-        """
-        :return: None
-        """
+        """适用于重复点击按钮时增长进度条"""
         progress = self.progressBar.value()
         print(progress,type(progress))
         increase_value = math.ceil(1 / int(self.calculate_value) * 100)
@@ -188,18 +186,22 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         else:
             self.progressBar.setValue(100)
 
-    def calculate_progress_by_time(self,interval,percenting):
+    def calculate_progress_by_time(self, interval=0.1, value_per_interval=1):
         """
+        适用于按时间间隔增长进度条
         :param interval: 进度条渐进时间间隔
-        :param percenting: 进度条加载进度值
-        :return: None
+        :param value_per_interval: 每次间隔，进度条加载的进度值
+        :return: None,打印耗时，耗时约为：100 / value_per_interval * interval
         """
+        start = time.time()
         progress = self.progressBar.value()
         print(progress,type(progress))
         for i in range(100):
             time.sleep(interval)
-            self.progressBar.setValue(i * percenting)
-            if self.progressBar.value() == 100 - percenting:
+            self.progressBar.setValue(i * value_per_interval)
+            if self.progressBar.value() == 100 - value_per_interval:
+                end = time.time()
+                print('耗时约为：{}'.format(end - start))
                 return
 
     def confirem_and_check_result(self):

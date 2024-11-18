@@ -13,6 +13,7 @@ import time
 import sys
 import math
 
+from rich.progress import track
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
 from guessNumberWindow import Ui_GuessNumber
@@ -102,7 +103,7 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
 
     # 生成数字不能重复的目标数字
     def create_target_number(self):
-        for i in range(10):
+        for i in track(range(10), description='进度:', complete_style='green', finished_style='red'):
             time.sleep(1)
             num_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
             str_list = random.sample(num_list, self.length)

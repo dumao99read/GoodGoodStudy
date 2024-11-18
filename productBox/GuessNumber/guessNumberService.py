@@ -102,10 +102,12 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
 
     # 生成数字不能重复的目标数字
     def create_target_number(self):
-        num_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-        str_list = random.sample(num_list, self.length)
-        self.target_number = ''.join(str_list)
-        print(self.target_number)
+        for i in range(10):
+            time.sleep(1)
+            num_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+            str_list = random.sample(num_list, self.length)
+            self.target_number = ''.join(str_list)
+            print('第{}次：'.format(i+1),self.target_number)
         return self.target_number
 
     # 输入合理的竞猜数字
@@ -177,14 +179,11 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
 
     def calculate_progress(self):
         """适用于重复点击按钮时增长进度条"""
-        progress = self.progressBar.value()
-        print(progress,type(progress))
-        increase_value = math.ceil(1 / int(self.calculate_value) * 100)
-        print(increase_value,type(increase_value))
-        if progress + increase_value < 100:
-            self.progressBar.setValue(progress + increase_value)
+        self.progressBar.setMaximum(self.calculate_value)
+        if self.times != 0:
+            self.progressBar.setValue(self.progressBar.value() + 1)
         else:
-            self.progressBar.setValue(100)
+            self.progressBar.setValue(self.calculate_value)
 
     def calculate_progress_by_time(self, interval=0.1, value_per_interval=1):
         """
@@ -194,6 +193,7 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         :return: None,打印耗时，耗时约为：100 / value_per_interval * interval
         """
         start = time.time()
+        self.progressBar.setMaximum(100)
         progress = self.progressBar.value()
         print(progress,type(progress))
         for i in range(100):

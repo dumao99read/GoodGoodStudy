@@ -12,14 +12,27 @@ import random
 import time
 import sys
 import math
+from threading import Thread
 
 from rich.progress import track
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.uic import loadUi
 from guessNumberWindow import Ui_GuessNumber
 
 CURR_PATH = os.path.dirname(__file__)
 DEBUG = True
+
+class GameThread(QThread):
+    OneSecondTriger = pyqtSignal()
+    def __int__(self):
+        super().__init__()
+
+    def run(self):
+        while True:
+            self.OneSecondTriger.emit()
+            time.sleep(1)
+
 
 class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
 
@@ -48,6 +61,7 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         # 信号槽链接
         self.pushButton_start.clicked.connect(self.start_game)  # 开始游戏
         self.action_start.triggered.connect(self.start_game)
+
         self.pushButton_control.clicked.connect(self.set_game)  # 游戏设置
 
         self.pushButton_exit.clicked.connect(self.exit_game)  # 退出游戏
@@ -103,7 +117,9 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
 
     # 生成数字不能重复的目标数字
     def create_target_number(self):
-        for i in track(range(10), description='进度:', complete_style='green', finished_style='red'):
+
+        #for i in track(range(10), description='进度:', complete_style='green', finished_style='red'):
+        for i in range(10):
             time.sleep(1)
             num_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
             str_list = random.sample(num_list, self.length)
@@ -144,7 +160,10 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         return '{}A{}B'.format(count_a, count_b)
 
     def start_game(self):
-        self.calculate_progress_by_time(0.1,5)
+        self.progressBar.setValue(0)
+        x = Thread(target=self.calculate_progress_by_time)
+        x.start()
+        # self.calculate_progress_by_time()
         self.pushButton_start.setEnabled(False)
         self.pushButton_confirm.setEnabled(True)
         self.lineEdit.clear()
@@ -153,7 +172,9 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         self.textBrowser.setEnabled(True)
 
         self.times = self.spinBox_times.value()
+
         self.create_target_number()  # 创建目标随机数
+        self.progressBar.setValue(100)
         self.lineEdit.setPlaceholderText('')
         self.textBrowser.setText('游戏开始！您还有{}次机会'.format(self.times))
 
@@ -186,26 +207,30 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         else:
             self.progressBar.setValue(self.calculate_value)
 
-    def calculate_progress_by_time(self, interval=0.1, value_per_interval=1):
+    def calculate_progress_by_time(self):
         """
         适用于按时间间隔增长进度条
         :param interval: 进度条渐进时间间隔
         :param value_per_interval: 每次间隔，进度条加载的进度值
         :return: None,打印耗时，耗时约为：100 / value_per_interval * interval
         """
+        interval = 0.1
+        value_per_interval = 2
+
         start = time.time()
         self.progressBar.setMaximum(100)
         progress = self.progressBar.value()
-        print(progress,type(progress))
+
         for i in range(100):
             time.sleep(interval)
             self.progressBar.setValue(i * value_per_interval)
             if self.progressBar.value() == 100 - value_per_interval:
                 end = time.time()
                 print('耗时约为：{}'.format(end - start))
-                return
+                break
 
     def confirem_and_check_result(self):
+
         self.calculate_progress()
 
         self.input_guess_number()

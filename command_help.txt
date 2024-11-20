@@ -34,3 +34,4 @@ pyuic5 guessNumberWindow.ui -o guessNumberWindow.py -x   --会自动加Main代�
 打包命令：
 -w：隐藏控制台；-F：单文件模式；-D：文件夹模式
 pyinstaller -w -F guessNumberService.py   -- 打包成可执行文件
+pyinstaller -F guessNumberService.py

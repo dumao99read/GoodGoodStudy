@@ -23,15 +23,25 @@ from guessNumberWindow import Ui_GuessNumber
 CURR_PATH = os.path.dirname(__file__)
 DEBUG = True
 
-class GameThread(QThread):
-    OneSecondTriger = pyqtSignal()
-    def __int__(self):
+class WorkThread(QThread):
+    # 信号池
+    work_target = pyqtSignal(str)  # 竞猜目标值，传递给主线程
+    work_time = pyqtSignal(int)  # 时间值，用于进度条的进度展示
+    def __init__(self, length, times):
         super().__init__()
+        self.length = length  # 从主线程传递过来的实例参数
+        self.times = times
 
     def run(self):
-        while True:
-            self.OneSecondTriger.emit()
+        for i in range(self.times):
             time.sleep(1)
+            self.work_time.emit(i+1)
+            num_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+            str_list = random.sample(num_list, self.length)
+            target_number = ''.join(str_list)
+            print('第{}次：'.format(i + 1), target_number)
+        self.work_target.emit(target_number)
+
 
 
 class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
@@ -48,14 +58,15 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         else:
             self.setupUi(self)
 
-        # 建立信号槽连接
-        self.initUI()
 
-        self.target_numer = target_number  # 目标值
+        self.target_number = target_number  # 目标值
         self.guess_number = guess_number  # 竞猜值
         self.length = self.spinBox_length.value()  # 游戏竞猜数字长度
         self.times = self.spinBox_times.value()  # 游戏竞猜次数
         self.calculate_value = self.spinBox_times.value()  # 进度条计算的除数
+
+        # 建立信号槽连接
+        self.initUI()
 
     def initUI(self):
         # 信号槽链接
@@ -70,33 +81,6 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         self.pushButton_confirm.clicked.connect(self.confirem_and_check_result)  # 输入确认
         self.pushButton_confirm_2.clicked.connect(self.control_game)  # 设置确定
 
-    # 展示游戏菜单
-    def show_game_menu(self):
-        print("""
-            游戏规则说明：
-            1）从0~9中选取{0}个不重复的数字，视为猜数字，一共有{1}次竞猜机会（{1}由玩家控制）；
-            2）每猜一次，系统会返回当前猜数字的结果，用A和B来代替：
-                ①如果有一个数字和位置都猜对了，记作1A，如果有一个数字猜对了但位置错了，记作1B，
-                  A的优先级比B高（意思就是已经记作A的数字，不会再统计B）
-                ②当所有数字和位置都正确时，记作{0}A0B，玩家胜利；当所有数字都正确但位置都错误时，记作0A{0}B；
-                  如果所有数字都没有猜对，记作0A0B。
-                ③请充分利用数字不能重复和系统返回的猜数字结果，猜想你心中的答案吧。祝你好运！""".format(self.length,
-                                                                                                     self.times))
-        print("""
-            1，开始游戏
-            2，游戏设置
-            3，退出游戏
-        """)
-        game_mode = input("请选择：")
-        if game_mode == '1':
-            self.run()
-        elif game_mode == '2':
-            self.control_game()
-        elif game_mode == '3':
-            pass
-        else:
-            print('输入有误，请重新输入：')
-            self.show_game_menu()
 
     # 控制游戏参数
     def control_game(self):
@@ -116,16 +100,22 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
 
 
     # 生成数字不能重复的目标数字
-    def create_target_number(self):
+    def create_target_number(self, value):
 
         #for i in track(range(10), description='进度:', complete_style='green', finished_style='red'):
-        for i in range(10):
-            time.sleep(1)
-            num_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-            str_list = random.sample(num_list, self.length)
-            self.target_number = ''.join(str_list)
-            print('第{}次：'.format(i+1),self.target_number)
-        return self.target_number
+        # for i in range(10):
+        #     time.sleep(1)
+        #     num_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        #     str_list = random.sample(num_list, self.length)
+        #     self.target_number = ''.join(str_list)
+        #     print('第{}次：'.format(i+1),self.target_number)
+        # return self.target_number
+        self.target_number = value
+        print('已接收目标值：', self.target_number)
+        time.sleep(1)
+        self.progressBar.setValue(0)
+        self.pushButton_confirm.setEnabled(True)
+        # self.xgame.quit()
 
     # 输入合理的竞猜数字
     def input_guess_number(self):
@@ -159,27 +149,37 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
                     count_b += 1
         return '{}A{}B'.format(count_a, count_b)
 
+    def update_progress(self, value):
+        self.progressBar.setMaximum(self.calculate_value)
+        self.progressBar.setValue(value)
+
     def start_game(self):
-        self.progressBar.setValue(0)
-        x = Thread(target=self.calculate_progress_by_time)
-        x.start()
-        # self.calculate_progress_by_time()
         self.pushButton_start.setEnabled(False)
-        self.pushButton_confirm.setEnabled(True)
+        self.progressBar.setValue(0)
+        self.times = self.spinBox_times.value()
+        self.length = self.spinBox_length.value()
+
+        self.xgame = WorkThread(self.length, self.times)
+        self.xgame.work_target.connect(self.create_target_number)
+        self.xgame.work_time.connect(self.update_progress)
+        self.xgame.start()
+
+        # self.calculate_progress_by_time()
+
         self.lineEdit.clear()
         self.lineEdit.setEnabled(True)
         self.textBrowser.clear()
         self.textBrowser.setEnabled(True)
 
-        self.times = self.spinBox_times.value()
 
-        self.create_target_number()  # 创建目标随机数
-        self.progressBar.setValue(100)
+
+        #self.create_target_number()  # 创建目标随机数
+        #self.progressBar.setValue(100)
         self.lineEdit.setPlaceholderText('')
         self.textBrowser.setText('游戏开始！您还有{}次机会'.format(self.times))
 
-        time.sleep(1)
-        self.progressBar.setValue(0)
+        # time.sleep(1)
+        # self.progressBar.setValue(0)
 
 
     def set_game(self):
@@ -236,6 +236,7 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         self.input_guess_number()
         self.times -= 1
         info = self.check_result(self.target_number, self.guess_number)  # 判断竞猜结果
+        print('输出结果：', self.target_number, self.guess_number)
         if self.times != 0 and info != '{}A0B'.format(self.length):
             self.textBrowser.append('{}的检查结果为:{},你还剩下{}次机会'.format(self.guess_number, info, self.times))
         elif self.times == 0 and info != '{}A0B'.format(self.length):

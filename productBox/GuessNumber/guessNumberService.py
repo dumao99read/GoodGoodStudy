@@ -122,6 +122,7 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
             self.guess_number = self.lineEdit.text()
             if not self.guess_number:
                 print('输入为空，请重新输入！')
+                self.Qboxmessage.about
                 self.lineEdit.setText('输入为空，请重新输入！')
             else:
                 num_list = list(self.guess_number)

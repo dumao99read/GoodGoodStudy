@@ -31,8 +31,13 @@ ui转换成py命令：
 pyuic5 guessNumberWindow.ui -o guessNumberWindow.py     --不会自动加Main代码
 pyuic5 guessNumberWindow.ui -o guessNumberWindow.py -x   --会自动加Main代码
 
-资源文件转换指令：
-pyrcc5 -o img.py img.qrc
+资源文件转换步骤：
+1）用qtdesign新建资源文件；
+2）用指令转换成py文件：pyrcc5 -o img.py img.qrc
+3）在主程序中导入包：import img，这样在UI窗口和主窗口都可以使用以下方法调用图标：
+icon = QtGui.QIcon()
+icon.addPixmap(QtGui.QPixmap(":/img/img/lele.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+self.about.setWindowIcon(icon)
 
 打包命令：
 -w：隐藏控制台；-F：单文件模式；-D：文件夹模式

@@ -17,7 +17,7 @@ class Ui_GuessNumber(object):
         GuessNumber.setEnabled(True)
         GuessNumber.resize(800, 600)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/img/img/tx.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/img/img/lele.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         GuessNumber.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(GuessNumber)
         self.centralwidget.setObjectName("centralwidget")

@@ -1,6 +1,6 @@
 <RCC>
   <qresource prefix="img">
-    <file>lele.png</file>
-    <file>tx.png</file>
+    <file>img/lele.png</file>
+    <file>img/tx.png</file>
   </qresource>
 </RCC>

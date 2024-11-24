@@ -18,6 +18,7 @@ from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 from PyQt5.uic import loadUi
 from PyQt5.QtWidgets import QMessageBox
 from guessNumberWindow import Ui_GuessNumber
+import img
 
 CURR_PATH = os.path.dirname(__file__)
 DEBUG = False
@@ -56,6 +57,7 @@ class About(QtWidgets.QMainWindow, Ui_Form):
         super().__init__()
         self.setupUi(self)
 
+
 class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
 
     def __init__(self, target_number='', guess_number=''):
@@ -85,6 +87,11 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
     def abountBtn(self):
         self.about = About()
         self.about.setWindowTitle("关于")
+
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/img/img/lele.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.about.setWindowIcon(icon)
+
         self.about.show()
 
     def initUI(self):

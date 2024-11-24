@@ -43,3 +43,4 @@ self.about.setWindowIcon(icon)
 -w：隐藏控制台；-F：单文件模式；-D：文件夹模式
 pyinstaller -w -F guessNumberService.py   -- 打包成可执行文件
 pyinstaller -F guessNumberService.py
+pyinstaller --clean -F -w -i=".\img\lele.ico" guessNumberService.py  --每次打包都清理，且增加程序图标

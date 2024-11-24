@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="png">
+    <file>img/lele.png</file>
+  </qresource>
+  <qresource prefix="mp3">
+    <file>music/test.mp3</file>
+  </qresource>
+</RCC>

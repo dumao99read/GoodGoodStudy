@@ -14,11 +14,13 @@ import sys
 import math
 from threading import Thread
 
-from PyQt5.QtCore import QThread, pyqtSignal, QTimer
+from PyQt5.QtCore import QThread, pyqtSignal, QTimer, QUrl
 from PyQt5.uic import loadUi
 from PyQt5.QtWidgets import QMessageBox
 from guessNumberWindow import Ui_GuessNumber
-import img
+import res
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PyQt5 import Qt
 
 CURR_PATH = os.path.dirname(__file__)
 DEBUG = False
@@ -71,8 +73,6 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
             loadUi(ui_path, self)
         else:
             self.setupUi(self)
-            # self.about = About()
-
 
         self.target_number = target_number  # 目标值
         self.guess_number = guess_number  # 竞猜值
@@ -89,10 +89,18 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         self.about.setWindowTitle("关于")
 
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/img/img/lele.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/png/img/lele.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.about.setWindowIcon(icon)
 
         self.about.show()
+
+    def musicBtn(self):
+        self.music = QMediaPlayer()
+        self.music.setVolume(5)  # 设置音量
+        url = QUrl("qrc:/mp3/music/test.mp3")
+        self.music.setMedia(QMediaContent(url))
+        self.music.play()
+        self.music.playbackRateChanged
 
     def initUI(self):
         # 信号槽链接
@@ -107,6 +115,7 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         self.pushButton_confirm.clicked.connect(self.confirem_and_check_result)  # 输入确认
         self.pushButton_confirm_2.clicked.connect(self.control_game)  # 设置确定
         self.action_help.triggered.connect(self.abountBtn)
+        self.musicBtn()  # 启用音乐
 
     # 控制游戏参数
     def control_game(self):

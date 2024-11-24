@@ -17,7 +17,7 @@ class Ui_GuessNumber(object):
         GuessNumber.setEnabled(True)
         GuessNumber.resize(800, 600)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/img/img/lele.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/png/img/lele.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         GuessNumber.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(GuessNumber)
         self.centralwidget.setObjectName("centralwidget")
@@ -192,13 +192,4 @@ class Ui_GuessNumber(object):
         self.action_start.setText(_translate("GuessNumber", "开始"))
         self.action_exit.setText(_translate("GuessNumber", "退出"))
         self.action_help.setText(_translate("GuessNumber", "关于"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    GuessNumber = QtWidgets.QMainWindow()
-    ui = Ui_GuessNumber()
-    ui.setupUi(GuessNumber)
-    GuessNumber.show()
-    sys.exit(app.exec_())
+import res

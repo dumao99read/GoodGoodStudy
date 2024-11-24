@@ -32,11 +32,11 @@ pyuic5 guessNumberWindow.ui -o guessNumberWindow.py     --不会自动加Main代
 pyuic5 guessNumberWindow.ui -o guessNumberWindow.py -x   --会自动加Main代码
 
 资源文件转换步骤：
-1）用qtdesign新建资源文件；
-2）用指令转换成py文件：pyrcc5 -o img.py img.qrc
-3）在主程序中导入包：import img，这样在UI窗口和主窗口都可以使用以下方法调用图标：
+1）用qtdesign新建资源文件，原先的属性资源也要重新替换；
+2）用指令转换成py文件：pyrcc5 -o res.py res.qrc (先用这个指令转换资源文件，再用pyuic5指令转换ui文件。)
+3）在主程序中导入包：import res，这样在UI窗口和主窗口都可以使用以下方法调用图标：
 icon = QtGui.QIcon()
-icon.addPixmap(QtGui.QPixmap(":/img/img/lele.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+icon.addPixmap(QtGui.QPixmap(":/png/img/lele.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 self.about.setWindowIcon(icon)
 
 打包命令：

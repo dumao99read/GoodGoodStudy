@@ -17,8 +17,8 @@
    <string>猜数字</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="img.qrc">
-    <normaloff>:/img/img/lele.png</normaloff>:/img/img/lele.png</iconset>
+   <iconset resource="res.qrc">
+    <normaloff>:/png/img/lele.png</normaloff>:/png/img/lele.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="Line" name="line">
@@ -437,7 +437,7 @@ font: 12pt &quot;Agency FB&quot;;</string>
   </action>
  </widget>
  <resources>
-  <include location="img.qrc"/>
+  <include location="res.qrc"/>
  </resources>
  <connections/>
 </ui>

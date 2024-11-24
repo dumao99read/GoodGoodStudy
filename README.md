@@ -6,3 +6,6 @@ https://blog.csdn.net/weixin_47406082/article/details/134234802?ops_request_misc
 
 2）解决中文乱码问题
 https://blog.csdn.net/weixin_42455006/article/details/121309747?ops_request_misc=%257B%2522request%255Fid%2522%253A%252269F45C68-DB5C-47AA-B138-90721D34B4CA%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=69F45C68-DB5C-47AA-B138-90721D34B4CA&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-2-121309747-null-null.142^v100^pc_search_result_base8&utm_term=pycharm%E6%8E%A7%E5%88%B6%E5%8F%B0%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81&spm=1018.2226.3001.4187
+
+3)pyinstaller打包文件太大：
+https://so.csdn.net/so/search?spm=1000.2115.3001.4498&q=pyinstaller%E6%89%93%E5%8C%85%E6%96%87%E4%BB%B6%E5%A4%AA%E5%A4%A7&t=&u=&urw=

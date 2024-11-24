@@ -10,17 +10,14 @@ Remark:
 import os.path
 import random
 import time
-import sys
-import math
-from threading import Thread
+
 
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer, QUrl
-from PyQt5.uic import loadUi
+# from PyQt5.uic import loadUi
 from PyQt5.QtWidgets import QMessageBox
 from guessNumberWindow import Ui_GuessNumber
 import res
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
-from PyQt5 import Qt
 
 CURR_PATH = os.path.dirname(__file__)
 DEBUG = False

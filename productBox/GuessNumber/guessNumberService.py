@@ -19,7 +19,7 @@ from PyQt5.uic import loadUi
 from PyQt5.QtWidgets import QMessageBox
 from guessNumberWindow import Ui_GuessNumber
 import res
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
 from PyQt5 import Qt
 
 CURR_PATH = os.path.dirname(__file__)
@@ -95,12 +95,18 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         self.about.show()
 
     def musicBtn(self):
-        self.music = QMediaPlayer()
+        self.music = QMediaPlayer()  # 播放器
         self.music.setVolume(5)  # 设置音量
+        # url = QUrl("qrc:/mp3/music/test.mp3")
+        # list_player = self.music.setMedia(QMediaContent(url))
+        # self.music.playlist()
+
         url = QUrl("qrc:/mp3/music/test.mp3")
-        self.music.setMedia(QMediaContent(url))
+        self.play_list = QMediaPlaylist()  # 播放列表
+        self.play_list.addMedia(QMediaContent(url))
+        self.music.setPlaylist(self.play_list)  # 设置播放清单
+        self.play_list.setPlaybackMode(QMediaPlaylist.Loop)  # 循环播放
         self.music.play()
-        self.music.playbackRateChanged
 
     def initUI(self):
         # 信号槽链接

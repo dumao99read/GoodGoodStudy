@@ -412,8 +412,9 @@ font: 12pt &quot;Agency FB&quot;;</string>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
-     <string extracomment="123">帮助</string>
+     <string extracomment="123">选项</string>
     </property>
+    <addaction name="action_mute"/>
     <addaction name="action_help"/>
    </widget>
    <addaction name="menu"/>
@@ -433,6 +434,11 @@ font: 12pt &quot;Agency FB&quot;;</string>
   <action name="action_help">
    <property name="text">
     <string>关于</string>
+   </property>
+  </action>
+  <action name="action_mute">
+   <property name="text">
+    <string>静音</string>
    </property>
   </action>
  </widget>

@@ -80,9 +80,12 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         self.times = self.spinBox_times.value()  # 游戏竞猜次数
         self.calculate_value = self.spinBox_times.value()  # 进度条计算的除数
 
+        # 初始化音乐
+        self.initMusic()
 
         # 建立信号槽连接
         self.initUI()
+
 
     def abountBtn(self):
         self.about = About()
@@ -94,14 +97,14 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
 
         self.about.show()
 
-    def musicBtn(self):
+    def initMusic(self):
         self.music = QMediaPlayer()  # 播放器
         self.music.setVolume(5)  # 设置音量
-        # url = QUrl("qrc:/mp3/music/test.mp3")
+        # url = QUrl("qrc:/mp3/music/piliyouxia.mp3")
         # list_player = self.music.setMedia(QMediaContent(url))
         # self.music.playlist()
 
-        url = QUrl("qrc:/mp3/music/test.mp3")
+        url = QUrl("qrc:/mp3/music/doudizhu.wav")
         self.play_list = QMediaPlaylist()  # 播放列表
         self.play_list.addMedia(QMediaContent(url))
         self.music.setPlaylist(self.play_list)  # 设置播放清单
@@ -120,8 +123,8 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
 
         self.pushButton_confirm.clicked.connect(self.confirem_and_check_result)  # 输入确认
         self.pushButton_confirm_2.clicked.connect(self.control_game)  # 设置确定
-        self.action_help.triggered.connect(self.abountBtn)
-        self.musicBtn()  # 启用音乐
+        self.action_help.triggered.connect(self.abountBtn)  # 关于按钮
+        self.action_mute.triggered.connect(self.muteBtn)  # 静音按钮
 
     # 控制游戏参数
     def control_game(self):
@@ -138,6 +141,13 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         self.pushButton_confirm.setEnabled(False)
         self.pushButton_start.setEnabled(True)
 
+    def muteBtn(self):
+        if self.music.volume() != 0:
+            self.music.setVolume(0)
+            self.action_mute.setText("取消静音")
+        else:
+            self.music.setVolume(5)
+            self.action_mute.setText("静音")
 
 
     # 生成数字不能重复的目标数字

@@ -3,6 +3,7 @@
     <file>img/lele.png</file>
   </qresource>
   <qresource prefix="mp3">
-    <file>music/test.mp3</file>
+    <file>music/doudizhu.wav</file>
+    <file>music/piliyouxia.mp3</file>
   </qresource>
 </RCC>

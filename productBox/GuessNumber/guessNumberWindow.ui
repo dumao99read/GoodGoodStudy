@@ -17,8 +17,8 @@
    <string>猜数字</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="img.qrc">
-    <normaloff>:/img/img/qq.png</normaloff>:/img/img/qq.png</iconset>
+   <iconset>
+    <normaloff>:/img/img/lele.png</normaloff>:/img/img/lele.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="Line" name="line">
@@ -380,7 +380,7 @@ font: 12pt &quot;Agency FB&quot;;</string>
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>10</y>
+      <y>40</y>
       <width>661</width>
       <height>23</height>
      </rect>
@@ -412,8 +412,9 @@ font: 12pt &quot;Agency FB&quot;;</string>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
-     <string extracomment="123">关于</string>
+     <string extracomment="123">帮助</string>
     </property>
+    <addaction name="action_help"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -429,9 +430,14 @@ font: 12pt &quot;Agency FB&quot;;</string>
     <string>退出</string>
    </property>
   </action>
+  <action name="action_help">
+   <property name="text">
+    <string>关于</string>
+   </property>
+  </action>
  </widget>
  <resources>
-  <include location="img.qrc"/>
+  <include location="img/img.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -14,9 +14,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_GuessNumber(object):
     def setupUi(self, GuessNumber):
         GuessNumber.setObjectName("GuessNumber")
+        GuessNumber.setEnabled(True)
         GuessNumber.resize(800, 600)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/img/img/qq.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/img/img/tx.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         GuessNumber.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(GuessNumber)
         self.centralwidget.setObjectName("centralwidget")
@@ -128,7 +129,9 @@ class Ui_GuessNumber(object):
         self.textBrowser.setGeometry(QtCore.QRect(400, 190, 291, 121))
         self.textBrowser.setObjectName("textBrowser")
         self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
-        self.progressBar.setGeometry(QtCore.QRect(100, 30, 661, 23))
+        self.progressBar.setEnabled(True)
+        self.progressBar.setGeometry(QtCore.QRect(100, 40, 661, 23))
+        self.progressBar.setStyleSheet("background-color: rgb(255, 170, 0);")
         self.progressBar.setProperty("value", 0)
         self.progressBar.setObjectName("progressBar")
         GuessNumber.setCentralWidget(self.centralwidget)
@@ -147,9 +150,12 @@ class Ui_GuessNumber(object):
         self.action_start.setObjectName("action_start")
         self.action_exit = QtWidgets.QAction(GuessNumber)
         self.action_exit.setObjectName("action_exit")
+        self.action_help = QtWidgets.QAction(GuessNumber)
+        self.action_help.setObjectName("action_help")
         self.menu.addAction(self.action_start)
         self.menu.addAction(self.action_exit)
         self.menu.addSeparator()
+        self.menu_2.addAction(self.action_help)
         self.menubar.addAction(self.menu.menuAction())
         self.menubar.addAction(self.menu_2.menuAction())
 
@@ -182,10 +188,10 @@ class Ui_GuessNumber(object):
         self.pushButton_confirm_2.setText(_translate("GuessNumber", "确认"))
         self.textBrowser.setPlaceholderText(_translate("GuessNumber", "这里显示竞猜结果..."))
         self.menu.setTitle(_translate("GuessNumber", "菜单"))
-        self.menu_2.setTitle(_translate("GuessNumber", "关于"))
+        self.menu_2.setTitle(_translate("GuessNumber", "帮助"))
         self.action_start.setText(_translate("GuessNumber", "开始"))
         self.action_exit.setText(_translate("GuessNumber", "退出"))
-import img_rc
+        self.action_help.setText(_translate("GuessNumber", "关于"))
 
 
 if __name__ == "__main__":

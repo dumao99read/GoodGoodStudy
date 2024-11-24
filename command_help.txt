@@ -31,6 +31,9 @@ ui转换成py命令：
 pyuic5 guessNumberWindow.ui -o guessNumberWindow.py     --不会自动加Main代码
 pyuic5 guessNumberWindow.ui -o guessNumberWindow.py -x   --会自动加Main代码
 
+资源文件转换指令：
+pyrcc5 -o img.py img.qrc
+
 打包命令：
 -w：隐藏控制台；-F：单文件模式；-D：文件夹模式
 pyinstaller -w -F guessNumberService.py   -- 打包成可执行文件

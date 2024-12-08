@@ -11,6 +11,8 @@ import openpyxl
 import multiprocessing
 import logging
 
+from tools import file_setting
+
 CURRENT_DIR = os.getcwd()
 
 logger = logging.getLogger()
@@ -133,4 +135,6 @@ def strip_space(path, directory):
 
 if __name__ == '__main__':
     # check_space(CURRENT_DIR, '../fileDemo')
-    strip_space(CURRENT_DIR, '../fileDemo')
+    # strip_space(CURRENT_DIR, '../fileDemo')
+    file_setting.format_excel_by_openpyxl(os.path.join(CURRENT_DIR, '../fileDemo/测试3.xlsx'))
+

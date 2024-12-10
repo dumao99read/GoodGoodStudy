@@ -18,7 +18,7 @@ CURRENT_DIR = os.getcwd()
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO,
                     encoding='utf-8',
-                    filename='测试.log',
+                    filename='stripSpace.log',
                     filemode='w',  # 模式，a为追加，w为覆盖写
                     format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s : %(message)s')
 

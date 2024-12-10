@@ -1,7 +1,17 @@
+import logging
+import os
+
 import xlwings as xw
 import openpyxl
 from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
+from common.tryExcept import try_except
+
+logging.basicConfig(level=logging.INFO,
+                    encoding='utf-8',
+                    filename='file_seeting.log',
+                    filemode='w',  # 模式，a为追加，w为覆盖写
+                    format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s : %(message)s')
 
 def format_excel_by_xlwings(file_path, format_list=[]):
     app = xw.App(visible=False, add_book=False)  # 打开Excel工具
@@ -54,6 +64,7 @@ def format_excel_by_xlwings(file_path, format_list=[]):
     print('美化结束，请查看文件！\n{}'.format(file_path))
     return file_path
 
+@try_except
 def format_excel_by_openpyxl(file_path, format_list=[], filter_type=0, freez_cell=''):
     wb = openpyxl.load_workbook(file_path)
     sheets = wb.worksheets
@@ -93,11 +104,25 @@ def format_excel_by_openpyxl(file_path, format_list=[], filter_type=0, freez_cel
             if freez_cell:
                 sheet.freeze_panes = freez_cell
         wb.save(file_path)
-    except:
-        print('处理异常，请检查代码！')
+    except Exception as e:
+        print('处理异常，请检查代码！\n{}'.format(e))
 
     print('美化结束，请查看文件！\n{}'.format(file_path))
     return file_path
 
+def get_project_root():
+    """根据requirements.txt文件寻找项目根目录"""
+    cwd = os.getcwd()
+    while True:
+        if os.path.exists(os.path.join(cwd, 'requirements.txt')):
+            return cwd
+        parent_dir = os.path.dirname(cwd)
+        if parent_dir == cwd:
+            return None
+        cwd = parent_dir
+
+if __name__ == '__main__':
+    x = get_project_root()
+    print(x)
 
 

@@ -312,6 +312,7 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
 
 if __name__ == '__main__':
     import sys
+    # TODO : 使用进程后，如果打包成exe，这里需要加一行代码
     app = QtWidgets.QApplication(sys.argv)
     win = GuessNumber()
     win.show()

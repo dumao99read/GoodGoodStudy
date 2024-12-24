@@ -11,13 +11,17 @@ import os.path
 import random
 import time
 
-
+import openpyxl
+# from PyQt5 import Qt  # 从库找类大全
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer, QUrl
 # from PyQt5.uic import loadUi
+from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QMessageBox
 from guessNumberWindow import Ui_GuessNumber
 import res
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
+
+from tools.file_setting import get_project_root
 
 CURR_PATH = os.path.dirname(__file__)
 DEBUG = False
@@ -61,6 +65,8 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
 
     def __init__(self, target_number='', guess_number=''):
         super().__init__()
+        self.current_dir = get_project_root()
+        self.new_workbook_name = ''
 
         # 初始化ui界面，DEBUG为True时不需要转换文件，适合调界面样式；为False时需要转换文件，适合调新增控件
         if DEBUG:
@@ -107,6 +113,25 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         self.music.setPlaylist(self.play_list)  # 设置播放清单
         self.play_list.setPlaybackMode(QMediaPlaylist.Loop)  # 循环播放
         self.music.play()
+
+    def open_file(self):
+        if self.new_workbook_name != '' and self.new_workbook_name is not None:
+            file_path = self.new_workbook_name  # 先点击按钮1，则按钮2直接判断了按钮1生成的文件并直接获取
+        else:
+            file_path, _ = QFileDialog.getOpenFileName(self, "选择文件", self.current_dir, "Excel files(*.xlsx)")
+
+        # 检查用户是否选择了文件
+        if file_path:
+            QMessageBox.information(self, "文件路径", f"你选择的文件路径是：{file_path}")
+            # 使用 os.path.basename 提取文件名，对单个文件有效
+            filename = os.path.basename(file_path)
+            print(filename)
+            return file_path, openpyxl.load_workbook(file_path)
+
+        else:
+            QMessageBox.information(self, "info-提示", "文件未选择")
+            return None, None
+
 
     def initUI(self):
         # 信号槽链接
@@ -237,6 +262,8 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         self.pushButton_confirm_2.setEnabled(True)
         self.spinBox_length.setEnabled(True)
         self.spinBox_times.setEnabled(True)
+
+        self.open_file()
 
     def exit_game(self,name):
         print(name)

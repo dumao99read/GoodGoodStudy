@@ -7,11 +7,11 @@ from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 from common.tryExcept import try_except
 
-logging.basicConfig(level=logging.INFO,
-                    encoding='utf-8',
-                    filename='file_seeting.log',
-                    filemode='w',  # 模式，a为追加，w为覆盖写
-                    format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s : %(message)s')
+# logging.basicConfig(level=logging.INFO,
+#                     encoding='utf-8',
+#                     filename='file_seeting.log',
+#                     filemode='w',  # 模式，a为追加，w为覆盖写
+#                     format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s : %(message)s')
 
 def format_excel_by_xlwings(file_path, format_list=[]):
     app = xw.App(visible=False, add_book=False)  # 打开Excel工具
@@ -122,7 +122,6 @@ def get_project_root():
         cwd = parent_dir
 
 if __name__ == '__main__':
-    x = get_project_root()
-    print(x)
+    pass
 
 

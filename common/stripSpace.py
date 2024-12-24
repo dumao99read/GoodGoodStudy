@@ -56,7 +56,7 @@ def check_process(i, file, log_path):
     logger.addHandler(handle)
 
     for sheet_name in sheet_name_list:
-        data = pd.read_excel(file, sheet_name=sheet_name, header=None)
+        data = pd.read_excel(file, sheet_name=sheet_name, header=None)  # 注释测试
         for row_index, row in data.iterrows():
             for col_index, cell_value in enumerate(row):
                 if str(cell_value).startswith(' ') and str(cell_value).endswith(' '):

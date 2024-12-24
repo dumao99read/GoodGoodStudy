@@ -11,7 +11,8 @@ import openpyxl
 import multiprocessing
 import logging
 
-from tools import file_setting
+# TODO: 这个导入，会导致本文件的main里面的执行日志变成了file_setting.py里面的，待定位
+# from tools import file_setting
 
 CURRENT_DIR = os.getcwd()
 
@@ -60,11 +61,11 @@ def check_process(i, file, log_path):
         for row_index, row in data.iterrows():
             for col_index, cell_value in enumerate(row):
                 if str(cell_value).startswith(' ') and str(cell_value).endswith(' '):
-                    logger.warning(f'{sheet_name}页签第{row_index + 1}行{col_index + 1}列：已检查到有前后空格[{cell_value}]')
+                    logger.warning(f'{sheet_name}页签第{row_index + 1}行{chr(col_index + 65)}列：已检查到有前后空格[{cell_value}]')
                 elif str(cell_value).startswith(' '):
-                    logger.warning(f'{sheet_name}页签第{row_index + 1}行{col_index + 1}列：已检查到有前空格[{cell_value}]')
+                    logger.warning(f'{sheet_name}页签第{row_index + 1}行{chr(col_index + 65)}列：已检查到有前空格[{cell_value}]')
                 elif str(cell_value).endswith(' '):
-                    logger.warning(f'{sheet_name}页签第{row_index + 1}行{col_index + 1}列：已检查到有后空格[{cell_value}]')
+                    logger.warning(f'{sheet_name}页签第{row_index + 1}行{chr(col_index + 65)}列：已检查到有后空格[{cell_value}]')
 
     process_2 = time.time()
     logging.info(f'{i}号子进程结束：{file}')
@@ -134,7 +135,7 @@ def strip_space(path, directory):
 
 
 if __name__ == '__main__':
-    # check_space(CURRENT_DIR, '../fileDemo')
+    check_space(CURRENT_DIR, '../fileDemo')
     # strip_space(CURRENT_DIR, '../fileDemo')
-    file_setting.format_excel_by_openpyxl(os.path.join(CURRENT_DIR, '../fileDemo/测试3.xlsx'))
+    # file_setting.format_excel_by_openpyxl(os.path.join(CURRENT_DIR, '../fileDemo/测试3.xlsx'))
 

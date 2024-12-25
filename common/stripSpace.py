@@ -12,6 +12,7 @@ import multiprocessing
 import logging
 
 # TODO: 这个导入，会导致本文件的main里面的执行日志变成了file_setting.py里面的，待定位
+
 # from tools import file_setting
 
 CURRENT_DIR = os.getcwd()

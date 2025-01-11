@@ -10,6 +10,7 @@ import pandas as pd
 import openpyxl
 import multiprocessing
 import logging
+import win32com.client as win32
 
 # TODO: 这个导入，会导致本文件的main里面的执行日志变成了file_setting.py里面的，待定位
 
@@ -74,7 +75,22 @@ def check_process(i, file, log_path):
     print(f'{i}号子进程结束：{file}')
     print(f'{i}号子进程耗时为：{process_2 - process_1}')
 
-def strip_process(file):
+def calculate_excel(file):
+    # 启动Excel应用程序
+    excel = win32.Dispatch("Excel.Application")
+    # 设置为False可以避免Excel窗口弹出
+    excel.visible = False
+    # 打开文件
+    workbook = excel.Workbooks.Open(file)
+    # 计算所有公式
+    excel.Calculate()
+    # 保存文件
+    workbook.Save()
+    # 关闭Excel应用程序
+    workbook.Close()
+    excel.Quit()
+
+def strip_process(file,strip_char=''):
     if file.lower().endswith('.xlsm'):
         wb = openpyxl.load_workbook(file, keep_vba=True)
     else:
@@ -84,14 +100,25 @@ def strip_process(file):
     for sheet_name in sheet_name_list:
         ws = wb[sheet_name]
         data = pd.read_excel(file, sheet_name=sheet_name, header=None)
-        data = data.map(lambda x: x.strip() if isinstance(x, str) else x)
+        if not strip_char:
+            # 默认去空格
+            data = data.map(lambda x: x.strip() if isinstance(x, str) else x)
+        else:
+            data = data.map(lambda x: x.strip(strip_char) if isinstance(x, str) else x)
         for row_index, row in data.iterrows():
             for col_index, cell_value in enumerate(row):
+                cell  =ws.cell(row=row_index + 1, column=col_index + 1)
                 if pd.isna(cell_value):
                     continue  # pandas的合并单元格，子单元格是已NaN的形式出现的，遇到就跳过
+                # 判断单元格是否包含公式，如果包含公式，则cell_value取源公式
+                if cell.data_type == 'f':
+                    cell_value = cell.value
                 else:
                     ws.cell(row=row_index + 1, column=col_index + 1, value=cell_value)
     wb.save(file)
+
+    # 调用以下方法能够保证公式被正确计算，然后pandas读取公式就不会出现NaN的问题
+    calculate_excel(file)
 
 
 def check_space(path, directory):

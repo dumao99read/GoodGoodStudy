@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OutputSales</class>
+ <widget class="QMainWindow" name="OutputSales">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>猜数字</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>:/png/img/lele.png</normaloff>:/png/img/lele.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>50</y>
+      <width>661</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="line_2">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>60</y>
+      <width>20</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="line_4">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>60</y>
+      <width>20</width>
+      <height>451</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="line_6">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>310</y>
+      <width>661</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>150</y>
+      <width>521</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 170, 0);</string>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_start">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>100</y>
+      <width>151</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>23</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(170, 255, 127);
+font: 12pt &quot;Agency FB&quot;;</string>
+    </property>
+    <property name="text">
+     <string>选择交易文件</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string extracomment="123">选项</string>
+    </property>
+    <addaction name="action_mute"/>
+    <addaction name="action_help"/>
+   </widget>
+   <addaction name="menu_2"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_start">
+   <property name="text">
+    <string>开始</string>
+   </property>
+  </action>
+  <action name="action_exit">
+   <property name="text">
+    <string>退出</string>
+   </property>
+  </action>
+  <action name="action_help">
+   <property name="text">
+    <string>关于</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>静音</string>
+   </property>
+  </action>
+  <action name="action_mute">
+   <property name="text">
+    <string>静音</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../res/res.qrc"/>
+ </resources>
+ <connections/>
+</ui>

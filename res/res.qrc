@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="group1">
+    <file>music/doudizhu.wav</file>
+  </qresource>
+  <qresource prefix="group2">
+    <file>img/lele.png</file>
+  </qresource>
+</RCC>

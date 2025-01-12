@@ -3,7 +3,6 @@
 https://blog.csdn.net/chusheng1840/article/details/142736660?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522a7ec64e7347c41f880190c6dca690a7c%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=a7ec64e7347c41f880190c6dca690a7c&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-142736660-null-null.142^v100^pc_search_result_base9&utm_term=multiprocessing%E8%BF%9B%E7%A8%8B%E6%B1%A0&spm=1018.2226.3001.4187
 """
 
-
 import os
 import time
 import pandas as pd
@@ -12,8 +11,9 @@ import multiprocessing
 import logging
 import win32com.client as win32
 
-# TODO: 这个导入，会导致本文件的main里面的执行日志变成了file_setting.py里面的，待定位
+from openpyxl.utils import get_column_letter
 
+# TODO: 这个导入，会导致本文件的main里面的执行日志变成了file_setting.py里面的，待定位
 # from tools import file_setting
 
 CURRENT_DIR = os.getcwd()
@@ -26,7 +26,7 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s : %(message)s')
 
 
-def get_fileList_by_directory(path, directory, file_types = ['.xlsx','.xlsm']):
+def get_fileList_by_directory(path, directory, file_types=['.xlsx', '.xlsm']):
     file_path = os.path.join(path, directory)
     file_list = []
     for dirpath, dirnames, filenames in os.walk(file_path):
@@ -37,9 +37,10 @@ def get_fileList_by_directory(path, directory, file_types = ['.xlsx','.xlsm']):
         # 获取路径下所有指定类型的文件
         for file in filenames:
             if any(file.lower().endswith(file_type) for file_type in file_types):
-                file_list.append(os.path.join(dirpath,file))
+                file_list.append(os.path.join(dirpath, file))
 
     return file_list
+
 
 def check_process(i, file, log_path):
     file_name = os.path.split(file)[1]
@@ -63,17 +64,21 @@ def check_process(i, file, log_path):
         for row_index, row in data.iterrows():
             for col_index, cell_value in enumerate(row):
                 if str(cell_value).startswith(' ') and str(cell_value).endswith(' '):
-                    logger.warning(f'{sheet_name}页签第{row_index + 1}行{chr(col_index + 65)}列：已检查到有前后空格[{cell_value}]')
+                    logger.warning(
+                        f'{sheet_name}页签第{row_index + 1}行{chr(col_index + 65)}列：已检查到有前后空格[{cell_value}]')
                 elif str(cell_value).startswith(' '):
-                    logger.warning(f'{sheet_name}页签第{row_index + 1}行{chr(col_index + 65)}列：已检查到有前空格[{cell_value}]')
+                    logger.warning(
+                        f'{sheet_name}页签第{row_index + 1}行{chr(col_index + 65)}列：已检查到有前空格[{cell_value}]')
                 elif str(cell_value).endswith(' '):
-                    logger.warning(f'{sheet_name}页签第{row_index + 1}行{chr(col_index + 65)}列：已检查到有后空格[{cell_value}]')
+                    logger.warning(
+                        f'{sheet_name}页签第{row_index + 1}行{chr(col_index + 65)}列：已检查到有后空格[{cell_value}]')
 
     process_2 = time.time()
     logging.info(f'{i}号子进程结束：{file}')
     logging.info(f'{i}号子进程耗时为：{process_2 - process_1}')
     print(f'{i}号子进程结束：{file}')
     print(f'{i}号子进程耗时为：{process_2 - process_1}')
+
 
 def calculate_excel(file):
     # 启动Excel应用程序
@@ -90,7 +95,30 @@ def calculate_excel(file):
     workbook.Close()
     excel.Quit()
 
-def strip_process(file,strip_char=''):
+
+def get_non_head_cells(merged_cells):
+    non_head_merged_cell_list = []
+
+    for merged_cell_range in merged_cells:
+        # 找出每个合并单元格的边界(左上角的first_cell和右下角的last_cell)
+        first_cell_col = merged_cell_range.min_col
+        first_cell_row = merged_cell_range.min_row
+        last_cell_col = merged_cell_range.max_col
+        last_cell_row = merged_cell_range.max_row
+
+        # 根据边界遍历合并单元格，找到所有子项(非左上角的first_cell)并添加到最终列表
+        for row in range(first_cell_row, last_cell_row + 1):
+            for col in range(first_cell_col, last_cell_col + 1):
+                if row == first_cell_row and col == first_cell_col:
+                    continue
+                non_head_merged_cell = get_column_letter(col) + str(row)
+                non_head_merged_cell_list.append(non_head_merged_cell)
+
+    return non_head_merged_cell_list
+
+
+
+def strip_process(file, strip_char=''):
     if file.lower().endswith('.xlsm'):
         wb = openpyxl.load_workbook(file, keep_vba=True)
     else:
@@ -99,6 +127,9 @@ def strip_process(file,strip_char=''):
 
     for sheet_name in sheet_name_list:
         ws = wb[sheet_name]
+        merged_cells  = ws.merged_cells
+        non_head_cell_list = get_non_head_cells(merged_cells)
+
         data = pd.read_excel(file, sheet_name=sheet_name, header=None)
         if not strip_char:
             # 默认去空格
@@ -107,9 +138,11 @@ def strip_process(file,strip_char=''):
             data = data.map(lambda x: x.strip(strip_char) if isinstance(x, str) else x)
         for row_index, row in data.iterrows():
             for col_index, cell_value in enumerate(row):
-                cell  =ws.cell(row=row_index + 1, column=col_index + 1)
-                if pd.isna(cell_value):
-                    continue  # pandas的合并单元格，子单元格是已NaN的形式出现的，遇到就跳过
+                cell = ws.cell(row=row_index + 1, column=col_index + 1)
+                # if pd.isna(cell_value): # pandas的合并单元格，子单元格是已NaN的形式出现的，遇到就跳过
+                # 合并单元格子项只读，判断出来直接跳过，主要解决格式刷弄出来的特殊合并单元格的问题
+                if cell.coordinate in non_head_cell_list:
+                    continue
                 # 判断单元格是否包含公式，如果包含公式，则cell_value取源公式
                 if cell.data_type == 'f':
                     cell_value = cell.value
@@ -147,7 +180,8 @@ def check_space(path, directory):
     time2 = time.time()
     print('检查空格整体耗时为：{}'.format(time2 - time1))
 
-def strip_space(path, directory):
+
+def strip_space(path, directory, strip_char=''):
     time1 = time.time()
     file_list = get_fileList_by_directory(path, directory)
 
@@ -155,15 +189,20 @@ def strip_space(path, directory):
     process_num = int(cpu_count / 2)
     pool = multiprocessing.Pool(processes=process_num)
 
-    pool.map(strip_process, file_list)
+    # 创建进程池，分配进程任务
+    # pool.map(strip_process, file_list)
+    pool = multiprocessing.Pool(processes=process_num)
+    for file in file_list:
+        pool.apply_async(strip_process, args=(file, strip_char))
+
+    pool.close()
+    pool.join()
 
     time2 = time.time()
     print('去除空格整体耗时为：{}'.format(time2 - time1))
-
 
 
 if __name__ == '__main__':
     check_space(CURRENT_DIR, '../fileDemo')
     # strip_space(CURRENT_DIR, '../fileDemo')
     # file_setting.format_excel_by_openpyxl(os.path.join(CURRENT_DIR, '../fileDemo/测试3.xlsx'))
-

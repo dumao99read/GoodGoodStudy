@@ -17,7 +17,7 @@ class Ui_OutputSales(object):
         OutputSales.setEnabled(True)
         OutputSales.resize(800, 600)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/group2/img/lele.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/png/img/lele.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         OutputSales.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(OutputSales)
         self.centralwidget.setObjectName("centralwidget")
@@ -90,6 +90,7 @@ class Ui_OutputSales(object):
         self.action_help.setText(_translate("OutputSales", "关于"))
         self.action.setText(_translate("OutputSales", "静音"))
         self.action_mute.setText(_translate("OutputSales", "静音"))
+import res
 
 
 if __name__ == "__main__":

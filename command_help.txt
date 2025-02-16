@@ -2,10 +2,15 @@ pip freeze > requirements.txt # 自动生成/更新requirements文件
 pip install -r requirements.txt # 自动安装依赖库
 pip install xlwings==0.32.2 # 安装指定版本的第三方库
 
-git add . # 将工作区的新增/修改添加到缓存区
-git commit -m "" # 将缓存区记录的新增/修改提交到本地仓库
-git push # 将本地仓库最新代码推送到远程仓库
+git add .  # 将工作区的新增/修改添加到缓存区
+git commit -m ""  # 将缓存区记录的新增/修改提交到本地仓库
+git push  # 将本地仓库最新代码推送到远程仓库
+git log  # 查看git日志
 
+# 以下是恢复代码保存记录的一种方式：
+git fsck --lost-found
+git show commitid
+git apply commitid
 """
 如果本地是个人仓，push之前先从远程master仓库pull拉取最新代码。
 这样即使出现代码冲突，也可以在pycharm客户端通过工具解决冲突，然后再push到个人远程仓。
@@ -13,11 +18,12 @@ git push # 将本地仓库最新代码推送到远程仓库
 """
 
 git stash # 将工作区的新增/修改添加到暂存区，可以多次反复添加
-git stash save "" # 相比上一步，多加了注释功能，方便识别1。
-git stash list # 查看暂存区的历史记录列表
-git stash clear # 清空暂存区的所有内容，注意git add .的记录也会清除哦
-git stash pop # 从暂存区取出一次的记录,可选参数不输入就默认取最后一次（取出后历史记录就没有这一条了）
-git stash apply n # 从暂存区应用某次记录,n代表序号如1，2，3(应用后历史记录还在)
+git stash save ""  # 相比上一步，多加了注释功能，方便识别1。
+git stash list  # 查看暂存区的历史记录列表
+git stash clear  # 清空暂存区的所有内容，注意git add .的记录也会清除哦
+git stash pop [0]  # 从暂存区取出一次的记录,可选参数不输入就默认取最后一次（取出后历史记录就没有这一条了）
+git stash apply [0]  # 从暂存区应用某次记录,n代表序号如1，2，3(应用后历史记录还在)
+git stash show [-p] [0]  # 查看堆栈简介/-p:堆栈代码详情
 
 """
 git reset:重置，简单理解，就是穿越时光重返旧年代，重新生活一次。修改代码以后用到git push -f将本地代码
@@ -28,8 +34,8 @@ https://blog.csdn.net/qq_43775179/article/details/127572623?ops_request_misc=%25
 """
 
 ui转换成py命令：
-pyuic5 guessNumberWindow.ui -o guessNumberWindow.py     --不会自动加Main代码
-pyuic5 guessNumberWindow.ui -o guessNumberWindow.py -x   --会自动加Main代码
+pyuic5 guessNumberWindow.ui -o guessNumberWindow.py  # 不会自动加Main代码
+pyuic5 guessNumberWindow.ui -o guessNumberWindow.py -x  # 会自动加Main代码
 pyuic5 outputSalesWin.ui -o outputSalesWin.py -x
 
 资源文件转换步骤：

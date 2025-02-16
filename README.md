@@ -12,3 +12,7 @@ https://blog.csdn.net/qq_53123875/article/details/144389876?utm_source=miniapp_w
 
 4)pyinstaller打包文件太大：
 https://blog.csdn.net/JiuShu110/article/details/132625538?ops_request_misc=%257B%2522request%255Fid%2522%253A%252215fb1b4cd4cb768ed2437fb83d9d777b%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=15fb1b4cd4cb768ed2437fb83d9d777b&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-132625538-null-null.142^v100^pc_search_result_base9&utm_term=pyinstaller%E6%89%93%E5%8C%85%E6%96%87%E4%BB%B6%E5%A4%AA%E5%A4%A7&spm=1018.2226.3001.4187
+
+5) 解决gitHub无法直连的问题：
+https://blog.csdn.net/JiuShu110/article/details/132625538?ops_request_misc=%257B%2522request%255Fid%2522%253A%252215fb1b4cd4cb768ed2437fb83d9d777b%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=15fb1b4cd4cb768ed2437fb83d9d777b&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-132625538-null-null.142^v100^pc_search_result_base9&utm_term=pyinstaller%E6%89%93%E5%8C%85%E6%96%87%E4%BB%B6%E5%A4%AA%E5%A4%A7&spm=1018.2226.3001.4187
+

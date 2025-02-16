@@ -35,16 +35,27 @@ logging.basicConfig(level=logging.INFO,
 
 class WorkThread(QThread):
     # 信号池
-    work_done = pyqtSignal(str)  # 任务完成的信号
+    work_done = pyqtSignal(int)  # 任务完成的信号
 
     # work_time = pyqtSignal(int)  # 时间值，用于进度条的进度展示
-    def __init__(self, length, times):
+    def __init__(self, file_path, wb, type):
         super().__init__()
-        self.length = length  # 从主线程传递过来的实例参数
-        self.times = times
+        self.file_path = file_path  # 从主线程传递过来的实例参数
+        self.wb = wb
+        self.type = type
 
     def run(self):
-        self.work_done.emit()
+        if self.type == 1:
+            self.run_1()
+        elif self.type == 2:
+            self.run_2()
+
+    def run_1(self):
+        if self.wb:
+            time.sleep(2)
+            logging.info('任务完成')
+            self.work_done.emit(100)
+
 
 
 class About(QtWidgets.QMainWindow, Ui_Form):
@@ -96,7 +107,7 @@ class OutputSales(QtWidgets.QMainWindow, Ui_OutputSales):
 
     def open_file(self):
         if self.new_workbook_name != '' and self.new_workbook_name is not None:
-            file_path = self.new_workbook_name  # 先点击按钮1，则按钮2直接判断了按钮1生成的文件并直接获取
+            file_path = self.new_workbook_name
         else:
             file_path, _ = QFileDialog.getOpenFileName(self, "选择文件", self.current_dir, "Excel files(*.xlsx)")
 
@@ -104,8 +115,8 @@ class OutputSales(QtWidgets.QMainWindow, Ui_OutputSales):
         if file_path:
             QMessageBox.information(self, "文件路径", f"你选择的文件路径是：{file_path}")
             # 使用 os.path.basename 提取文件名，对单个文件有效
-            filename = os.path.basename(file_path)
-            print(filename)
+            # filename = os.path.basename(file_path)
+            logging.info("你选择的文件是：%s", file_path)
             return file_path, openpyxl.load_workbook(file_path)
 
         else:
@@ -134,15 +145,37 @@ class OutputSales(QtWidgets.QMainWindow, Ui_OutputSales):
         else:
             return
 
+    def update_finish(self, value):
+        self.progressBar.setValue(value)
+        QMessageBox.information(self, "info-提示", "任务完成！")
+        self.pushButton_start.setEnabled(True)
+        self.progressBar.setValue(0)
+        self.file_path = ''
+        return
+
     def start_output(self):
         logging.info('开始导出任务！')
         self.pushButton_start.setEnabled(False)
         self.progressBar.setMaximum(100)
         self.progressBar.setValue(0)
 
-        self.xtime = QTimer()
-        self.xtime.timeout.connect(self.update_progress)
-        self.xtime.start(100)  # 每隔多少毫秒调度一次定时器，用于进度条渐进
+        self.file_path, self.wb = self.open_file()
+        try:
+            # 启动工作任务
+            self.xstart = WorkThread(self.file_path, self.wb, 1)
+            self.xstart.work_done.connect(self.update_finish)  # 接收任务信号以便控制界面
+            self.xstart.start()
+
+            # 启动计时器
+            self.xtime = QTimer()
+            self.xtime.timeout.connect(self.update_progress)
+            self.xtime.start(100)  # 每隔多少毫秒调度一次定时器，用于进度条渐进
+        except:
+            QMessageBox.information(self, "info-提示", "文件未选择")
+            self.pushButton_start.setEnabled(True)
+
+
+
 
 
 

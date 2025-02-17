@@ -12,6 +12,7 @@ import os.path
 import random
 import time
 import logging
+import traceback
 
 import openpyxl
 from PyQt5 import QtGui, QtWidgets
@@ -35,7 +36,8 @@ logging.basicConfig(level=logging.INFO,
 
 class WorkThread(QThread):
     # 信号池
-    work_done = pyqtSignal(int)  # 任务完成的信号
+    work_done_signal = pyqtSignal()  # 任务完成的信号
+    work_break_signal = pyqtSignal()  # 任务中断的信号
 
     # work_time = pyqtSignal(int)  # 时间值，用于进度条的进度展示
     def __init__(self, file_path, wb, type):
@@ -51,11 +53,16 @@ class WorkThread(QThread):
             self.run_2()
 
     def run_1(self):
-        if self.wb:
+        try:
+            x = 5
+            y = 0
+            z = x/y
             time.sleep(2)
             logging.info('任务完成')
-            self.work_done.emit(100)
-
+            self.work_done_signal.emit()
+        except Exception:
+            logging.error("程序异常:  %s" % traceback.format_exc())
+            self.work_break_signal.emit()
 
 
 class About(QtWidgets.QMainWindow, Ui_Form):
@@ -145,12 +152,21 @@ class OutputSales(QtWidgets.QMainWindow, Ui_OutputSales):
         else:
             return
 
-    def update_finish(self, value):
-        self.progressBar.setValue(value)
+    def work_done(self):
+        self.progressBar.setValue(100)
+        self.work_start.requestInterruption()  # 停止子线程
+        self.work_time.stop()  # 停止计时器
         QMessageBox.information(self, "info-提示", "任务完成！")
         self.pushButton_start.setEnabled(True)
         self.progressBar.setValue(0)
-        self.file_path = ''
+        return
+
+    def work_break(self):
+        self.progressBar.setValue(0)
+        self.work_start.requestInterruption()  # 停止子线程
+        self.work_time.stop()  # 停止计时器
+        QMessageBox.information(self, "info-提示", "任务异常，查看日志！")
+        self.pushButton_start.setEnabled(True)
         return
 
     def start_output(self):
@@ -160,22 +176,19 @@ class OutputSales(QtWidgets.QMainWindow, Ui_OutputSales):
         self.progressBar.setValue(0)
 
         self.file_path, self.wb = self.open_file()
-        try:
+        if self.file_path:
             # 启动工作任务
-            self.xstart = WorkThread(self.file_path, self.wb, 1)
-            self.xstart.work_done.connect(self.update_finish)  # 接收任务信号以便控制界面
-            self.xstart.start()
+            self.work_start = WorkThread(self.file_path, self.wb, 1)
+            self.work_start.work_done_signal.connect(self.work_done)  # 接收任务信号以便控制界面
+            self.work_start.work_break_signal.connect(self.work_break)  # 接收任务信号以便控制界面
+            self.work_start.start()
 
             # 启动计时器
-            self.xtime = QTimer()
-            self.xtime.timeout.connect(self.update_progress)
-            self.xtime.start(100)  # 每隔多少毫秒调度一次定时器，用于进度条渐进
-        except:
-            QMessageBox.information(self, "info-提示", "文件未选择")
+            self.work_time = QTimer()
+            self.work_time.timeout.connect(self.update_progress)
+            self.work_time.start(100)  # 每隔多少毫秒调度一次定时器，用于进度条渐进
+        else:
             self.pushButton_start.setEnabled(True)
-
-
-
 
 
 

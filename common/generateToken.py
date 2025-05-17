@@ -1,6 +1,6 @@
 """生成token"""
 
-key_word = '2025'
+
 
 def split_into_pairs(key_word):
     if len(key_word) % 2 != 0:
@@ -22,5 +22,6 @@ def generate_token(key_word):
     return token
 
 if __name__ == '__main__':
+    key_word = '2027'
     token = generate_token(key_word)
     print(token)

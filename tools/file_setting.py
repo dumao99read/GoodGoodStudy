@@ -1,6 +1,8 @@
+import datetime
 import logging
 import os
 
+import pytz
 import xlwings as xw
 import openpyxl
 from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
@@ -121,7 +123,15 @@ def get_project_root():
             return None
         cwd = parent_dir
 
+def get_current_time_stamp(format_type='%Y%m%d%H%M%S'):
+    """根据当前系统时区来获取指定格式的时间戳(当地时间)"""
+    local_time_zone = datetime.datetime.utcnow().astimezone().tzinfo
+    time_stamp =  datetime.datetime.now(tz=local_time_zone).strftime(format_type)
+    # time_stamp = datetime.datetime.now(tz=pytz.timezone('Asia/Shanghai')).strftime(format_type)
+    return time_stamp
+
 if __name__ == '__main__':
-    pass
+    x = get_current_time_stamp()
+    print(x)
 
 

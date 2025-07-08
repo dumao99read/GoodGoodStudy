@@ -7,14 +7,14 @@ Project:PycharmProjects
 Remark:
 ===========================
 """
-import os.path
-import os.path
-import random
-import time
 import logging
+import os.path
+import os.path
+import time
 import traceback
 
 import openpyxl
+import pandas as pd
 from PyQt5 import QtGui, QtWidgets
 # from PyQt5 import Qt  # 从库找类大全
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer, QUrl
@@ -22,10 +22,10 @@ from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
 # from PyQt5.uic import loadUi
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtWidgets import QMessageBox
+from openpyxl.styles import Alignment
 
 from ui.about import Ui_Form
 from ui.outputSalesWin import Ui_OutputSales
-from res import res
 
 logging.basicConfig(level=logging.INFO,
                     encoding='UTF-8',
@@ -63,6 +63,33 @@ class WorkThread(QThread):
         except Exception:
             logging.error("程序异常:  %s" % traceback.format_exc())
             self.work_break_signal.emit()
+
+    def run_2(self):
+        """开始清洗转换数据"""
+        export_file = 'D:\Program Files\JetBrains\CODE\GoodGoodStudy\export\导出.xlsx'
+        write_file = 'D:\Program Files\JetBrains\CODE\GoodGoodStudy\export\写入.xlsx'
+
+        df = pd.read_excel(export_file,
+                           usecols=['订单编号', '总金额', '买家实际支付金额', '订单状态', '订单付款时间 ', '宝贝标题 ',
+                                    '宝贝种类 ', '宝贝总数量', '退款金额', '发货时间'])
+
+        list_df = df.values.tolist()
+        print(list_df)
+
+        wb = openpyxl.load_workbook(write_file)
+        ws = wb['25年5月']
+        max_cols = ws.max_column
+        max_rows_begin = ws.max_row + 1  # 开始写入行
+        max_rows_end = max_rows_begin + len(list_df) - 1  # 结束写入行
+        for item in list_df:  # 从二维数据列表中取值
+            ws.append(item)
+
+        for row in ws.iter_rows(min_row=max_rows_begin, max_row=max_rows_end, min_col=1, max_col=max_cols):
+            for cell in row:
+                cell.alignment = Alignment(vertical='center')  # 上下对齐方式：垂直居中(默认)
+
+        wb.save(write_file)
+        print('调试完成，请打开:{}'.format(write_file))
 
 
 class About(QtWidgets.QMainWindow, Ui_Form):

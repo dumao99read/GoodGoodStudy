@@ -1,6 +1,7 @@
 import datetime
 import logging
 import os
+import time
 
 import pytz
 import xlwings as xw
@@ -130,8 +131,53 @@ def get_current_time_stamp(format_type='%Y%m%d%H%M%S'):
     # time_stamp = datetime.datetime.now(tz=pytz.timezone('Asia/Shanghai')).strftime(format_type)
     return time_stamp
 
+def wait_and_loading(msg, dp=5, loop=2):
+    """
+    等待加载效果，默认5*2=10秒，适用于异步任务轮询时，控制台不想输出太多信息。
+    :param msg: 要补充的提示信息
+    :param dp: 小数点的数量
+    :param loop: 循环加载的次数
+    """
+    print(msg, end='')
+    i = 0
+    while i < loop:
+        for item in range(dp):
+            print('.', end='')
+            time.sleep(1)
+        print('\b' * dp, end='')  # 清空小数点
+        i += 1
+    print('\b' * 999, end='')  # 清空屏幕
+
+
+class NumberIterator:
+    def __init__(self):
+        self.current = 1  # 初始值为1
+
+    def __iter__(self):
+        return self  # 返回迭代器对象本身
+
+    def __next__(self):
+        if self.current > 10:
+            raise StopIteration  # 超过指定值时停止迭代
+        num = self.current
+        self.current += 1  # 数值加1，供下次调用
+        return num
+
 if __name__ == '__main__':
-    x = get_current_time_stamp()
-    print(x)
+    # x = get_current_time_stamp()
+    # print(x)
+
+    # 轮询等待，以迭代器计数来模拟异步任务的完成状态
+    x = NumberIterator()
+    time_start = time.time()
+    for i in range(100):
+        y = next(x)
+        print(y)  # 实际使用中不希望一行行打印y的值，就可以注释掉此行
+        if y == 4:
+            time_end = time.time()
+            print(f'任务已完成，耗时为：{round(time_end - time_start, 3)}秒。')
+            break
+        else:
+            wait_and_loading('正在遍历迭代器，请稍等', dp=3, loop=1)
 
 

@@ -51,7 +51,7 @@ from PyQt5.uic import loadUi
 from about import Ui_Form
 
 CURR_PATH = os.path.dirname(__file__)
-DEBUG = False
+DEBUG = True
 
 
 class About(QtWidgets.QMainWindow, Ui_Form):
@@ -263,7 +263,7 @@ class GuessNumber(QtWidgets.QMainWindow, Ui_GuessNumber):
         self.spinBox_length.setEnabled(True)
         self.spinBox_times.setEnabled(True)
 
-        self.open_file()
+        # self.open_file()
 
     def exit_game(self,name):
         print(name)

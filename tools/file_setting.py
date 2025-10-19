@@ -8,7 +8,7 @@ import xlwings as xw
 import openpyxl
 from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
-from common.tryExcept import try_except
+from hwLearning.tryExcept import try_except
 
 # logging.basicConfig(level=logging.INFO,
 #                     encoding='utf-8',

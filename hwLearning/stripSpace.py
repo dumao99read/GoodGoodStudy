@@ -13,7 +13,8 @@ import win32com.client as win32
 
 from openpyxl.utils import get_column_letter
 
-# TODO: 这个导入，会导致本文件的main里面的执行日志变成了file_setting.py里面的，待定位
+# TODO: 这个导入，会导致本文件的main里面的执行日志变成了file_setting.py里面的，待确认
+# TODO: 一般只会在主文件添加日志信息，如果是辅助文件也要添加日志信息，应该如何处理冲突？
 # from tools import file_setting
 
 CURRENT_DIR = os.getcwd()

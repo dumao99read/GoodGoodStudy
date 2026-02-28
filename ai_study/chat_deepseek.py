@@ -1,6 +1,11 @@
+import os
+
 import requests
 import json
 from typing import List, Dict
+
+from tools.file_setting import get_project_root
+from tools.read_config import read_body_para
 
 
 class DeepSeekChat:
@@ -97,7 +102,10 @@ class DeepSeekChat:
 
 def main():
     # 配置你的API密钥
-    API_KEY = "sk-6215e21c01784dbba69ceaeb83040013"  # 请替换为你的实际API密钥
+    project_base = get_project_root()
+    config_file = os.path.join(project_base, 'config/config.json')
+    temp_dict = read_body_para(config_file)
+    API_KEY = temp_dict.get("apiKey")
 
     # 创建聊天客户端
     chat_client = DeepSeekChat(api_key=API_KEY)

@@ -51,4 +51,8 @@ D:\Program Files\JetBrains\CODE\GoodGoodStudy\ai_study\
 ### token消费记录
 *![截图10](res/截图10.png)*
 
+### ai编写的游戏运行记录
+*![截图11](res/截图11.png)*
+*![截图12](res/截图12.png)*
+
 *文档最后更新: 2026-03-01*

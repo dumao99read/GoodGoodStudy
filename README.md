@@ -12,5 +12,9 @@
 
 - [pyinstaller打包文件太大](https://blog.csdn.net/JiuShu110/article/details/132625538?ops_request_misc=%257B%2522request%255Fid%2522%253A%252215fb1b4cd4cb768ed2437fb83d9d777b%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=15fb1b4cd4cb768ed2437fb83d9d777b&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-132625538-null-null.142^v100^pc_search_result_base9&utm_term=pyinstaller%E6%89%93%E5%8C%85%E6%96%87%E4%BB%B6%E5%A4%AA%E5%A4%A7&spm=1018.2226.3001.4187)
 
-- [解决gitHub无法直连的问题](https://blog.csdn.net/lph159/article/details/143783520?ops_request_misc=%257B%2522request%255Fid%2522%253A%252233a25ce5c7f4a2a72883283010a155d2%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=33a25ce5c7f4a2a72883283010a155d2&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-143783520-null-null.142^v100^pc_search_result_base2&utm_term=Failed%20to%20connect%20to%20github.com%20port%20443%20after%2021076%20ms%3A%20Could%20not%20connect%20to%20server&spm=1018.2226.3001.4187)
 
+- [解决gitHub无法直连的问题](https://blog.csdn.net/lph159/article/details/143783520?ops_request_misc=%257B%2522request%255Fid%2522%253A%252233a25ce5c7f4a2a72883283010a155d2%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=33a25ce5c7f4a2a72883283010a155d2&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-143783520-null-null.142^v100^pc_search_result_base2&utm_term=Failed%20to%20connect%20to%20github.com%20port%20443%20after%2021076%20ms%3A%20Could%20not%20connect%20to%20server&spm=1018.2226.3001.4187)
+- 新增日记：在浏览器能访问gitHub，但是Git push推送代码报443的情况下，执行以下几个命令尝试解决：
+- git config --global --unset http.proxy
+- git config --global --unset https.proxy
+- ipconfig /flushdns

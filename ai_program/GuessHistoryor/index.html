@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史名人猜猜看</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .app {
+            width: 1100px;
+            max-width: 98vw;
+            height: 88vh;
+            display: flex;
+            flex-direction: column;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        .top-bar {
+            background: #4f46e5;
+            color: #fff;
+            padding: 14px 24px;
+            font-size: 17px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .app-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* sidebar */
+        .sidebar {
+            width: 260px;
+            background: #f8f9fa;
+            color: #1e1e2f;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            border-right: 1px solid #e5e7eb;
+        }
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-header h2 { font-size: 16px; font-weight: 600; }
+        .btn-new {
+            background: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-new:hover { background: #4338ca; }
+        .game-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        .game-item {
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+            transition: background 0.15s;
+        }
+        .game-item:hover { background: #e8eaed; }
+        .game-item.active { background: #dde1e6; }
+        .game-status-icon {
+            font-size: 14px;
+            flex-shrink: 0;
+            width: 18px;
+            text-align: center;
+        }
+        .game-info {
+            flex: 1;
+            overflow: hidden;
+        }
+        .game-label {
+            font-size: 13px;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .game-sub {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 1px;
+        }
+        .game-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+        .game-item:hover .game-actions { opacity: 1; }
+        .game-actions button {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 2px 4px;
+            border-radius: 4px;
+            line-height: 1;
+        }
+        .game-actions button:hover { color: #1e1e2f; background: #e8eaed; }
+        .game-actions .btn-del:hover { color: #ef4444; }
+        .empty-sidebar {
+            text-align: center;
+            color: #9ca3af;
+            padding: 32px 16px;
+            font-size: 14px;
+        }
+
+        /* main */
+        .main {
+            flex: 1;
+            background: #eef2ff;
+            display: flex;
+            flex-direction: column;
+        }
+        .game-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .game-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e1e2f;
+        }
+        .game-header .game-subtitle {
+            font-size: 13px;
+            color: #9ca3af;
+        }
+        .game-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* figure display */
+        .figure-display {
+            text-align: center;
+            margin: 12px 0 20px;
+        }
+        .figure-mystery {
+            font-size: 56px;
+            letter-spacing: 12px;
+            color: #4f46e5;
+            font-weight: 700;
+            user-select: none;
+        }
+        .figure-revealed {
+            font-size: 42px;
+            font-weight: 700;
+            color: #1e1e2f;
+        }
+        .figure-revealed .status-tag {
+            display: inline-block;
+            font-size: 16px;
+            padding: 4px 14px;
+            border-radius: 20px;
+            margin-left: 12px;
+            vertical-align: middle;
+        }
+        .status-tag.win { background: #d1fae5; color: #065f46; }
+        .status-tag.lose { background: #fce4ec; color: #b71c1c; }
+
+        /* hints board */
+        .hints-board {
+            width: 100%;
+            max-width: 480px;
+            margin: 8px 0 20px;
+        }
+        .hint-row {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #fff;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+        .hint-row.unlocked {
+            border-color: #4f46e5;
+            background: #eef2ff;
+        }
+        .hint-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6b7280;
+            width: 60px;
+            flex-shrink: 0;
+        }
+        .hint-value {
+            flex: 1;
+            font-size: 16px;
+            color: #1e1e2f;
+        }
+        .hint-value.locked {
+            color: #d1d5db;
+            font-style: italic;
+        }
+        .hint-icon {
+            font-size: 16px;
+            margin-left: 8px;
+        }
+
+        /* input & buttons */
+        .game-input-area {
+            width: 100%;
+            max-width: 480px;
+            margin-top: 8px;
+        }
+        .guess-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .guess-row input {
+            flex: 1;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 16px;
+            outline: none;
+            font-family: inherit;
+        }
+        .guess-row input:focus { border-color: #4f46e5; }
+        .guess-row input:disabled { opacity: 0.6; background: #f3f4f6; }
+        .btn-guess {
+            padding: 0 24px;
+            background: #10b981;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .btn-guess:hover { background: #059669; }
+        .btn-guess:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-hint {
+            width: 100%;
+            padding: 12px;
+            background: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-hint:hover { background: #4338ca; }
+        .btn-hint:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-hint.danger { background: #ef4444; }
+        .btn-hint.danger:hover { background: #dc2626; }
+
+        /* feedback */
+        .feedback {
+            text-align: center;
+            padding: 12px 16px;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 10px;
+            margin-top: 12px;
+        }
+        .feedback.error { background: #fce4ec; color: #b71c1c; }
+        .feedback.success { background: #d1fae5; color: #065f46; }
+        .feedback.info { background: #e8eaf6; color: #283593; }
+        .feedback.warning { background: #fff3e0; color: #e65100; }
+
+        .game-guesses {
+            width: 100%;
+            max-width: 480px;
+            margin-top: 12px;
+        }
+        .guess-entry {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        .guess-entry .mark { font-size: 14px; }
+
+        .welcome {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #9ca3af;
+            gap: 12px;
+        }
+        .welcome .icon { font-size: 48px; }
+        .welcome p { font-size: 15px; }
+
+        .loading { display: none; text-align: center; padding: 16px; color: #9ca3af; font-size: 14px; }
+        .loading.show { display: block; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+        .sidebar ::-webkit-scrollbar-thumb { background: #d1d5db; }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="top-bar">历史名人猜猜看</div>
+        <div class="app-body">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h2>游戏记录</h2>
+                    <button class="btn-new" onclick="newGame()">+ 新游戏</button>
+                </div>
+                <div class="game-list" id="gameList"></div>
+            </div>
+
+            <!-- Main -->
+            <div class="main">
+                <div class="game-header">
+                    <h3 id="gameTitle">历史名人猜猜看</h3>
+                    <span class="game-subtitle" id="gameSubtitle"></span>
+                </div>
+                <div class="game-body" id="gameBody">
+                    <div class="welcome">
+                        <div class="icon">🎭</div>
+                        <p>点击「新游戏」开始猜历史名人！</p>
+                    </div>
+                </div>
+                <div class="loading" id="loading">AI 生成中...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ---------- state ----------
+        let games = [];
+        let currentId = null;
+        let loading = false;
+
+        const gameListEl = document.getElementById('gameList');
+        const gameBody = document.getElementById('gameBody');
+        const loadingEl = document.getElementById('loading');
+        const gameTitle = document.getElementById('gameTitle');
+        const gameSubtitle = document.getElementById('gameSubtitle');
+
+        // ---------- api helpers ----------
+        async function api(path, options = {}) {
+            const res = await fetch(path, {
+                headers: { 'Content-Type': 'application/json' },
+                ...options,
+            });
+            const data = await res.json();
+            if (!res.ok && data.error) throw new Error(data.error);
+            return data;
+        }
+
+        // ---------- game list ----------
+        async function loadGames() {
+            try {
+                const list = await api('/api/games');
+                games = list;
+                renderSidebar();
+                if (currentId && !list.find(g => g.id === currentId)) {
+                    currentId = null;
+                    showWelcome();
+                }
+                if (!currentId && list.length > 0) {
+                    selectGame(list[0].id);
+                }
+                if (!currentId) {
+                    showWelcome();
+                }
+            } catch (e) {
+                showWelcome();
+            }
+        }
+
+        function renderSidebar() {
+            if (games.length === 0) {
+                gameListEl.innerHTML = '<div class="empty-sidebar">暂无游戏记录</div>';
+                return;
+            }
+            gameListEl.innerHTML = games.map(g => {
+                let icon = '▶';
+                let label = `第${g.game_number}局`;
+                let sub = '进行中...';
+                if (g.finished) {
+                    icon = g.won ? '✅' : '❌';
+                    sub = g.figure_name || '???';
+                }
+                return `
+                    <div class="game-item${g.id === currentId ? ' active' : ''}" data-id="${g.id}">
+                        <span class="game-status-icon">${icon}</span>
+                        <div class="game-info">
+                            <div class="game-label">${label}</div>
+                            <div class="game-sub">${escapeHtml(sub)}</div>
+                        </div>
+                        <div class="game-actions">
+                            <button class="btn-del" onclick="event.stopPropagation(); deleteGame('${g.id}')" title="删除">✕</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            gameListEl.querySelectorAll('.game-item').forEach(el => {
+                el.addEventListener('click', () => selectGame(el.dataset.id));
+            });
+        }
+
+        function scrollListToTop() {
+            document.querySelector('.game-list').scrollTop = 0;
+        }
+
+        // ---------- select game ----------
+        async function selectGame(id) {
+            if (id === currentId) return;
+            currentId = id;
+            renderSidebar();
+
+            const g = games.find(x => x.id === id);
+            if (!g) { showWelcome(); return; }
+
+            gameTitle.textContent = `第${g.game_number}局`;
+            gameSubtitle.textContent = g.finished
+                ? (g.won ? '✅ 猜对了' : '❌ 未猜中')
+                : '进行中...';
+
+            try {
+                const state = await api(`/api/game/${id}`);
+                renderGame(state);
+            } catch (e) {
+                gameBody.innerHTML = `<div class="welcome"><p>加载失败</p></div>`;
+            }
+        }
+
+        function showWelcome() {
+            gameBody.innerHTML = `
+                <div class="welcome">
+                    <div class="icon">🎭</div>
+                    <p>点击「新游戏」开始猜历史名人！</p>
+                </div>
+            `;
+            gameTitle.textContent = '历史名人猜猜看';
+            gameSubtitle.textContent = '';
+        }
+
+        // ---------- render game ----------
+        function renderGame(state) {
+            const finished = state.finished;
+            const won = state.won;
+            const hintsUsed = state.hints_used || 0;
+            const hints = state.hints || [];
+            const guesses = state.guesses || [];
+
+            const hintLabels = ['朝代', '身份', '姓氏'];
+            const hintKeys = ['dynasty', 'identity', 'surname'];
+
+            // Build hint rows - we need to show all 3 hint slots
+            let hintRowsHtml = '';
+            for (let i = 0; i < 3; i++) {
+                const unlocked = i < hints.length;
+                let value = unlocked ? hints[i].split('：')[1] || hints[i] : '点击提示解锁';
+                let icon = unlocked ? '🔓' : '🔒';
+                hintRowsHtml += `
+                    <div class="hint-row${unlocked ? ' unlocked' : ''}">
+                        <span class="hint-label">${hintLabels[i]}</span>
+                        <span class="hint-value${unlocked ? '' : ' locked'}">${unlocked ? escapeHtml(value) : value}</span>
+                        <span class="hint-icon">${icon}</span>
+                    </div>
+                `;
+            }
+
+            // Figure display
+            let figureHtml;
+            if (finished) {
+                const tagClass = won ? 'win' : 'lose';
+                const tagText = won ? '猜对了 🎉' : '未猜中';
+                figureHtml = `
+                    <div class="figure-display">
+                        <div class="figure-revealed">
+                            ${escapeHtml(state.figure_name)}
+                            <span class="status-tag ${tagClass}">${tagText}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                figureHtml = `
+                    <div class="figure-display">
+                        <div class="figure-mystery">?????</div>
+                    </div>
+                `;
+            }
+
+            // Guesses list
+            let guessesHtml = '';
+            if (guesses.length > 0) {
+                guessesHtml = '<div class="game-guesses">' +
+                    guesses.map(g => `
+                        <div class="guess-entry">
+                            <span class="mark">${g.correct ? '✅' : '❌'}</span>
+                            <span>${escapeHtml(g.guess)}</span>
+                        </div>
+                    `).join('') +
+                    '</div>';
+            }
+
+            // Feedback area
+            let feedbackHtml = '';
+            if (finished && won) {
+                feedbackHtml = `<div class="feedback success">🎉 恭喜你猜对了！答案是 ${escapeHtml(state.figure_name)}</div>`;
+            } else if (finished && !won) {
+                feedbackHtml = `<div class="feedback warning">游戏结束！答案是 ${escapeHtml(state.figure_name)}</div>`;
+            }
+
+            // Buttons
+            let hintBtn;
+            if (finished) {
+                hintBtn = `<button class="btn-hint" disabled>游戏已结束</button>`;
+            } else if (hintsUsed < 3) {
+                hintBtn = `<button class="btn-hint" id="hintBtn" onclick="requestHint()">获取提示 (${hintsUsed}/3)</button>`;
+            } else {
+                hintBtn = `<button class="btn-hint danger" id="hintBtn" onclick="requestHint()">查看答案（认输）</button>`;
+            }
+
+            let guessInput = finished ? '' : `
+                <div class="guess-row">
+                    <input type="text" id="guessInput" placeholder="输入你的猜测..." onkeydown="handleGuessKeydown(event)" autocomplete="off">
+                    <button class="btn-guess" id="guessBtn" onclick="submitGuess()">提交猜测</button>
+                </div>
+            `;
+
+            gameBody.innerHTML = `
+                ${figureHtml}
+                <div class="hints-board">${hintRowsHtml}</div>
+                <div class="game-input-area">
+                    ${guessInput}
+                    ${hintBtn}
+                    <div id="feedback"></div>
+                </div>
+                ${guessesHtml}
+            `;
+
+            if (!finished) {
+                const gi = document.getElementById('guessInput');
+                if (gi) setTimeout(() => gi.focus(), 100);
+            }
+        }
+
+        // ---------- game actions ----------
+        async function newGame() {
+            if (loading) return;
+            loading = true;
+            loadingEl.className = 'loading show';
+            try {
+                const data = await api('/api/game/new', { method: 'POST' });
+                games.unshift({
+                    id: data.id,
+                    game_number: data.game_number,
+                    figure_name: null,
+                    won: null,
+                    finished: false,
+                    hints_used: 0,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                });
+                renderSidebar();
+                scrollListToTop();
+                selectGame(data.id);
+            } catch (e) {
+                showError('创建游戏失败: ' + e.message);
+            } finally {
+                loading = false;
+                loadingEl.className = 'loading';
+            }
+        }
+
+        async function deleteGame(id) {
+            if (!confirm('确定要删除这个游戏记录吗？')) return;
+            try {
+                await api(`/api/game/${id}`, { method: 'DELETE' });
+                games = games.filter(g => g.id !== id);
+                if (currentId === id) {
+                    currentId = null;
+                    if (games.length > 0) {
+                        selectGame(games[0].id);
+                    } else {
+                        showWelcome();
+                    }
+                }
+                renderSidebar();
+            } catch (e) {
+                showError('删除失败');
+            }
+        }
+
+        async function requestHint() {
+            if (!currentId) return;
+            try {
+                const data = await api(`/api/game/${currentId}/hint`, { method: 'POST' });
+                if (data.game_over) {
+                    const g = games.find(x => x.id === currentId);
+                    if (g) {
+                        g.finished = true;
+                        g.won = false;
+                        g.figure_name = data.answer;
+                    }
+                    renderSidebar();
+                    const state = await api(`/api/game/${currentId}`);
+                    renderGame(state);
+                } else {
+                    const g = games.find(x => x.id === currentId);
+                    if (g) g.hints_used = data.hints_used;
+                    const state = await api(`/api/game/${currentId}`);
+                    renderGame(state);
+                }
+            } catch (e) {
+                showError(e.message);
+            }
+        }
+
+        async function submitGuess() {
+            const input = document.getElementById('guessInput');
+            if (!input) return;
+            const guess = input.value.trim();
+            if (!guess || !currentId) return;
+
+            input.disabled = true;
+            document.getElementById('guessBtn').disabled = true;
+
+            try {
+                const data = await api(`/api/game/${currentId}/guess`, {
+                    method: 'POST',
+                    body: JSON.stringify({ guess }),
+                });
+
+                const fb = document.getElementById('feedback');
+                if (data.game_over) {
+                    if (data.correct) {
+                        fb.innerHTML = `<div class="feedback success">🎉 ${escapeHtml(data.message)}</div>`;
+                    }
+                    const g = games.find(x => x.id === currentId);
+                    if (g) {
+                        g.finished = true;
+                        g.won = data.won;
+                        g.figure_name = data.answer;
+                    }
+                    renderSidebar();
+                    const state = await api(`/api/game/${currentId}`);
+                    renderGame(state);
+                } else {
+                    fb.innerHTML = `<div class="feedback error">${escapeHtml(data.message)}</div>`;
+                    input.value = '';
+                    input.disabled = false;
+                    document.getElementById('guessBtn').disabled = false;
+                    input.focus();
+                    const state = await api(`/api/game/${currentId}`);
+                    renderGame(state);
+                }
+            } catch (e) {
+                showError(e.message);
+                const input2 = document.getElementById('guessInput');
+                if (input2) { input2.disabled = false; input2.focus(); }
+                const btn = document.getElementById('guessBtn');
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        function handleGuessKeydown(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                submitGuess();
+            }
+        }
+
+        // ---------- helpers ----------
+        function showError(msg) {
+            const fb = document.getElementById('feedback');
+            if (fb) {
+                fb.innerHTML = `<div class="feedback error">${escapeHtml(msg)}</div>`;
+            }
+        }
+
+        function escapeHtml(text) {
+            const d = document.createElement('div');
+            d.textContent = text;
+            return d.innerHTML;
+        }
+
+        // ---------- init ----------
+        loadGames();
+    </script>
+</body>
+</html>

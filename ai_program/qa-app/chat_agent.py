@@ -1,9 +1,11 @@
 import os
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, send_from_directory
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate
+
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 load_dotenv()
 
@@ -25,7 +27,7 @@ chain = prompt | llm
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return send_from_directory(CURRENT_DIR, "index.html")
 
 
 @app.route("/chat", methods=["POST"])

@@ -14,24 +14,131 @@
             justify-content: center;
             align-items: center;
         }
-        .container {
-            width: 700px;
-            max-width: 95vw;
-            height: 80vh;
-            background: #fff;
+        .app {
+            width: 1100px;
+            max-width: 98vw;
+            height: 88vh;
+            display: flex;
             border-radius: 16px;
+            overflow: hidden;
             box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        /* sidebar */
+        .sidebar {
+            width: 260px;
+            background: #1e1e2f;
+            color: #cdd6f4;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            flex-shrink: 0;
         }
-        .header {
-            padding: 20px 24px;
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid #313244;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-header h2 { font-size: 16px; font-weight: 600; }
+        .btn-new {
             background: #4f46e5;
             color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
         }
-        .header h1 { font-size: 20px; font-weight: 600; }
-        .header p { font-size: 14px; opacity: 0.85; margin-top: 4px; }
+        .btn-new:hover { background: #4338ca; }
+        .conversation-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        .conv-item {
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
+            transition: background 0.15s;
+            position: relative;
+            group: true;
+        }
+        .conv-item:hover { background: #313244; }
+        .conv-item.active { background: #45475a; }
+        .conv-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 14px;
+            user-select: none;
+        }
+        .conv-name-input {
+            flex: 1;
+            background: #45475a;
+            border: 1px solid #4f46e5;
+            border-radius: 4px;
+            color: #cdd6f4;
+            padding: 2px 6px;
+            font-size: 14px;
+            outline: none;
+            font-family: inherit;
+        }
+        .conv-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+        .conv-item:hover .conv-actions { opacity: 1; }
+        .conv-actions button {
+            background: none;
+            border: none;
+            color: #a6adc8;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 2px 4px;
+            border-radius: 4px;
+            line-height: 1;
+        }
+        .conv-actions button:hover { color: #fff; background: #45475a; }
+        .conv-actions .btn-del:hover { color: #f38ba8; }
+        .empty-sidebar {
+            text-align: center;
+            color: #6c7086;
+            padding: 32px 16px;
+            font-size: 14px;
+        }
+
+        /* main */
+        .main {
+            flex: 1;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .chat-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e1e2f;
+        }
+        .chat-header .msg-count {
+            font-size: 13px;
+            color: #9ca3af;
+        }
         .messages {
             flex: 1;
             overflow-y: auto;
@@ -49,7 +156,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             flex-shrink: 0;
         }
         .message.bot .avatar { background: #4f46e5; color: #fff; }
@@ -59,8 +166,9 @@
             padding: 12px 16px;
             border-radius: 18px;
             font-size: 15px;
-            line-height: 1.6;
+            line-height: 1.7;
             word-break: break-word;
+            white-space: pre-wrap;
         }
         .message.bot .bubble {
             background: #f0f2f5;
@@ -71,7 +179,18 @@
             color: #fff;
             border-bottom-right-radius: 4px;
         }
-        .message.user .bubble p { margin: 0; }
+        .welcome {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #9ca3af;
+            gap: 12px;
+        }
+        .welcome .icon { font-size: 48px; }
+        .welcome p { font-size: 15px; }
+
         .input-area {
             padding: 16px 24px;
             border-top: 1px solid #e5e7eb;
@@ -106,56 +225,263 @@
         }
         .input-area button:hover { background: #4338ca; }
         .input-area button:disabled { opacity: 0.6; cursor: not-allowed; }
-        .loading { display: none; text-align: center; padding: 20px; color: #9ca3af; }
+        .loading { display: none; text-align: center; padding: 16px; color: #9ca3af; font-size: 14px; }
         .loading.show { display: block; }
-        .error { color: #ef4444; font-size: 14px; text-align: center; padding: 8px; }
-        pre { white-space: pre-wrap; font-family: inherit; margin: 0; }
+        .error-box { color: #ef4444; font-size: 14px; text-align: center; padding: 8px 24px; min-height: 0; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+        .sidebar ::-webkit-scrollbar-thumb { background: #45475a; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>AI 问答</h1>
-            <p>基于 LangChain + OpenAI 的智能问答助手</p>
+    <div class="app">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>对话列表</h2>
+                <button class="btn-new" onclick="newConversation()">+ 新建</button>
+            </div>
+            <div class="conversation-list" id="convList"></div>
         </div>
-        <div class="messages" id="messages"></div>
-        <div class="loading" id="loading">AI 思考中...</div>
-        <div class="error" id="error"></div>
-        <div class="input-area">
-            <textarea id="question" rows="1" placeholder="请输入你的问题..." onkeydown="handleKeydown(event)"></textarea>
-            <button id="sendBtn" onclick="sendQuestion()">发送</button>
+
+        <!-- Main -->
+        <div class="main">
+            <div class="chat-header">
+                <h3 id="chatTitle">AI 问答</h3>
+                <span class="msg-count" id="msgCount"></span>
+            </div>
+            <div class="messages" id="messages"></div>
+            <div class="loading" id="loading">AI 思考中...</div>
+            <div class="error-box" id="errorBox"></div>
+            <div class="input-area">
+                <textarea id="question" rows="1" placeholder="请输入你的问题..." onkeydown="handleKeydown(event)" disabled></textarea>
+                <button id="sendBtn" onclick="sendQuestion()" disabled>发送</button>
+            </div>
         </div>
     </div>
+
     <script>
+        // ---------- state ----------
+        let conversations = [];
+        let currentId = null;
+        let loading = false;
+
+        const convListEl = document.getElementById('convList');
         const messagesEl = document.getElementById('messages');
         const loadingEl = document.getElementById('loading');
-        const errorEl = document.getElementById('error');
+        const errorBox = document.getElementById('errorBox');
         const questionEl = document.getElementById('question');
         const sendBtn = document.getElementById('sendBtn');
+        const chatTitle = document.getElementById('chatTitle');
+        const msgCount = document.getElementById('msgCount');
 
-        function addMessage(type, text) {
-            const div = document.createElement('div');
-            div.className = 'message ' + type;
-            const avatar = type === 'bot' ? 'AI' : '我';
-            div.innerHTML = '<div class="avatar">' + avatar + '</div><div class="bubble"><pre>' + escapeHtml(text) + '</pre></div>';
-            messagesEl.appendChild(div);
-            messagesEl.scrollTop = messagesEl.scrollHeight;
+        // ---------- api helpers ----------
+        async function api(path, options = {}) {
+            const res = await fetch(path, {
+                headers: { 'Content-Type': 'application/json' },
+                ...options,
+            });
+            const data = await res.json();
+            if (!res.ok && data.error) throw new Error(data.error);
+            return data;
         }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        // ---------- conversation list ----------
+        async function loadConversations() {
+            const convs = await api('/api/conversations');
+            conversations = convs;
+            renderSidebar();
+            if (currentId && !convs.find(c => c.id === currentId)) {
+                currentId = null;
+                selectConversation(null);
+            }
+            if (!currentId && convs.length > 0) {
+                selectConversation(convs[0].id);
+            }
+            if (!currentId) {
+                showWelcome();
+            }
         }
 
-        function setLoading(show) {
-            loadingEl.className = 'loading' + (show ? ' show' : '');
-            sendBtn.disabled = show;
+        function renderSidebar() {
+            if (conversations.length === 0) {
+                convListEl.innerHTML = '<div class="empty-sidebar">暂无对话，点击上方新建</div>';
+                return;
+            }
+            convListEl.innerHTML = conversations.map(c => `
+                <div class="conv-item${c.id === currentId ? ' active' : ''}" data-id="${c.id}">
+                    <span class="conv-name" id="name-${c.id}">${escapeHtml(c.name)}</span>
+                    <div class="conv-actions">
+                        <button onclick="event.stopPropagation(); startRename('${c.id}')" title="重命名">✎</button>
+                        <button class="btn-del" onclick="event.stopPropagation(); deleteConv('${c.id}')" title="删除">✕</button>
+                    </div>
+                </div>
+            `).join('');
+
+            convListEl.querySelectorAll('.conv-item').forEach(el => {
+                el.addEventListener('click', () => selectConversation(el.dataset.id));
+            });
         }
 
-        function clearError() { errorEl.textContent = ''; }
+        function scrollConvListToTop() {
+            document.querySelector('.conversation-list').scrollTop = 0;
+        }
 
-        function setError(msg) { errorEl.textContent = msg; }
+        // ---------- select conversation ----------
+        async function selectConversation(id) {
+            if (id === currentId) return;
+            if (loading) return;
+
+            currentId = id;
+            renderSidebar();
+
+            if (!id) {
+                showWelcome();
+                return;
+            }
+
+            const conv = conversations.find(c => c.id === id);
+            chatTitle.textContent = conv ? conv.name : 'AI 问答';
+            msgCount.textContent = '';
+
+            questionEl.disabled = false;
+            sendBtn.disabled = false;
+            questionEl.focus();
+
+            // load messages
+            try {
+                const msgs = await api(`/api/conversations/${id}/messages`);
+                renderMessages(msgs);
+            } catch (e) {
+                showError('加载消息失败');
+            }
+        }
+
+        function showWelcome() {
+            messagesEl.innerHTML = `
+                <div class="welcome">
+                    <div class="icon">💬</div>
+                    <p>选择一个对话或新建一个开始聊天</p>
+                </div>
+            `;
+            chatTitle.textContent = 'AI 问答';
+            msgCount.textContent = '';
+            questionEl.disabled = true;
+            sendBtn.disabled = true;
+        }
+
+        // ---------- messages ----------
+        function renderMessages(msgs) {
+            if (!msgs || msgs.length === 0) {
+                messagesEl.innerHTML = '<div class="welcome"><div class="icon">✨</div><p>开始对话吧</p></div>';
+                return;
+            }
+            messagesEl.innerHTML = msgs.map(m => {
+                const type = m.role === 'user' ? 'user' : 'bot';
+                const avatar = type === 'bot' ? 'AI' : '我';
+                return `
+                    <div class="message ${type}">
+                        <div class="avatar">${avatar}</div>
+                        <div class="bubble">${escapeHtml(m.content)}</div>
+                    </div>
+                `;
+            }).join('');
+            msgCount.textContent = `${msgs.length} 条消息`;
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            setTimeout(() => { messagesEl.scrollTop = messagesEl.scrollHeight; }, 50);
+        }
+
+        // ---------- crud ----------
+        async function newConversation() {
+            if (loading) return;
+            try {
+                const conv = await api('/api/conversations', { method: 'POST', body: JSON.stringify({}) });
+                conversations.unshift({
+                    id: conv.id,
+                    name: conv.name,
+                    created_at: conv.created_at,
+                    updated_at: conv.updated_at,
+                    message_count: 0,
+                });
+                renderSidebar();
+                scrollConvListToTop();
+                selectConversation(conv.id);
+            } catch (e) {
+                showError('创建对话失败');
+            }
+        }
+
+        async function deleteConv(id) {
+            if (!confirm('确定要删除这个对话吗？')) return;
+            try {
+                await api(`/api/conversations/${id}`, { method: 'DELETE' });
+                conversations = conversations.filter(c => c.id !== id);
+                if (currentId === id) {
+                    currentId = null;
+                    if (conversations.length > 0) {
+                        selectConversation(conversations[0].id);
+                    } else {
+                        showWelcome();
+                    }
+                }
+                renderSidebar();
+            } catch (e) {
+                showError('删除失败');
+            }
+        }
+
+        function startRename(id) {
+            const span = document.getElementById(`name-${id}`);
+            const currentName = conversations.find(c => c.id === id)?.name || '';
+            const input = document.createElement('input');
+            input.className = 'conv-name-input';
+            input.value = currentName;
+            input.setAttribute('data-id', id);
+            span.replaceWith(input);
+            input.focus();
+            input.select();
+
+            const finish = async () => {
+                const newName = input.value.trim();
+                if (newName && newName !== currentName) {
+                    try {
+                        await api(`/api/conversations/${id}`, {
+                            method: 'PATCH',
+                            body: JSON.stringify({ name: newName }),
+                        });
+                        const conv = conversations.find(c => c.id === id);
+                        if (conv) conv.name = newName;
+                        if (currentId === id) chatTitle.textContent = newName;
+                    } catch (e) {
+                        showError('重命名失败');
+                    }
+                }
+                renderSidebar();
+            };
+
+            input.addEventListener('blur', finish);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+                if (e.key === 'Escape') { input.blur(); }
+            });
+        }
+
+        // ---------- send / chat ----------
+        function setLoading(state) {
+            loading = state;
+            loadingEl.className = 'loading' + (state ? ' show' : '');
+            sendBtn.disabled = state || !currentId;
+            questionEl.disabled = state || !currentId;
+        }
+
+        function showError(msg) {
+            errorBox.textContent = msg;
+            if (msg) setTimeout(() => { if (errorBox.textContent === msg) errorBox.textContent = ''; }, 5000);
+        }
 
         function handleKeydown(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -166,37 +492,66 @@
 
         async function sendQuestion() {
             const question = questionEl.value.trim();
-            if (!question) return;
+            if (!question || !currentId || loading) return;
 
-            clearError();
-            addMessage('user', question);
+            showError('');
+            addTempMessage('user', question);
             questionEl.value = '';
             questionEl.style.height = 'auto';
             setLoading(true);
 
             try {
-                const res = await fetch('/chat', {
+                const data = await api('/api/chat', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ question })
+                    body: JSON.stringify({ question, conversation_id: currentId }),
                 });
-                const data = await res.json();
-                if (data.error) {
-                    setError(data.error);
-                } else {
-                    addMessage('bot', data.answer);
+                addTempMessage('bot', data.answer);
+
+                // update conv list order & count
+                const conv = conversations.find(c => c.id === currentId);
+                if (conv) {
+                    conv.message_count += 2;
+                    conv.updated_at = new Date().toISOString();
                 }
-            } catch (err) {
-                setError('网络错误，请稍后重试');
+                conversations.sort((a, b) => b.updated_at.localeCompare(a.updated_at));
+                renderSidebar();
+            } catch (e) {
+                showError(e.message || '请求失败');
             } finally {
                 setLoading(false);
             }
         }
 
+        function addTempMessage(type, text) {
+            const welcome = messagesEl.querySelector('.welcome');
+            if (welcome) messagesEl.innerHTML = '';
+
+            const div = document.createElement('div');
+            div.className = 'message ' + type;
+            const avatar = type === 'bot' ? 'AI' : '我';
+            div.innerHTML = '<div class="avatar">' + avatar + '</div><div class="bubble">' + escapeHtml(text) + '</div>';
+            messagesEl.appendChild(div);
+
+            const count = messagesEl.querySelectorAll('.message').length;
+            msgCount.textContent = count + ' 条消息';
+            scrollToBottom();
+        }
+
+        // ---------- helpers ----------
+        function escapeHtml(text) {
+            const d = document.createElement('div');
+            d.textContent = text;
+            return d.innerHTML;
+        }
+
+        // ---------- auto resize textarea ----------
         questionEl.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
+
+        // ---------- init ----------
+        loadConversations();
     </script>
 </body>
 </html>

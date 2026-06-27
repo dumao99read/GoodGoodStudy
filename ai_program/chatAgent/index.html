@@ -282,7 +282,7 @@
         // ---------- state ----------
         let conversations = [];
         let currentId = null;
-        let loading = false;
+        let loadingConvs = new Set();
 
         const convListEl = document.getElementById('convList');
         const messagesEl = document.getElementById('messages');
@@ -348,7 +348,6 @@
         // ---------- select conversation ----------
         async function selectConversation(id) {
             if (id === currentId) return;
-            if (loading) return;
 
             currentId = id;
             renderSidebar();
@@ -414,7 +413,6 @@
 
         // ---------- crud ----------
         async function newConversation() {
-            if (loading) return;
             try {
                 const conv = await api('/api/conversations', { method: 'POST', body: JSON.stringify({}) });
                 conversations.unshift({
@@ -488,11 +486,17 @@
         }
 
         // ---------- send / chat ----------
-        function setLoading(state) {
-            loading = state;
-            loadingEl.className = 'loading' + (state ? ' show' : '');
-            sendBtn.disabled = state || !currentId;
-            questionEl.disabled = state || !currentId;
+        function setLoading(convId, state) {
+            if (state) {
+                loadingConvs.add(convId);
+            } else {
+                loadingConvs.delete(convId);
+            }
+            const anyLoading = loadingConvs.size > 0;
+            loadingEl.className = 'loading' + (anyLoading ? ' show' : '');
+            const thisLoading = loadingConvs.has(currentId);
+            sendBtn.disabled = thisLoading || !currentId;
+            questionEl.disabled = thisLoading || !currentId;
         }
 
         function showError(msg) {
@@ -509,23 +513,26 @@
 
         async function sendQuestion() {
             const question = questionEl.value.trim();
-            if (!question || !currentId || loading) return;
+            if (!question || !currentId || loadingConvs.has(currentId)) return;
 
             showError('');
             addTempMessage('user', question);
             questionEl.value = '';
             questionEl.style.height = 'auto';
-            setLoading(true);
+            const convId = currentId;
+            setLoading(convId, true);
 
             try {
                 const data = await api('/api/chat', {
                     method: 'POST',
-                    body: JSON.stringify({ question, conversation_id: currentId }),
+                    body: JSON.stringify({ question, conversation_id: convId }),
                 });
-                addTempMessage('bot', data.answer);
+                // only update UI if still viewing the same conversation
+                if (currentId === convId) {
+                    addTempMessage('bot', data.answer);
+                }
 
-                // update conv list order & count
-                const conv = conversations.find(c => c.id === currentId);
+                const conv = conversations.find(c => c.id === convId);
                 if (conv) {
                     conv.message_count += 2;
                     conv.updated_at = new Date().toISOString();
@@ -533,9 +540,11 @@
                 conversations.sort((a, b) => b.updated_at.localeCompare(a.updated_at));
                 renderSidebar();
             } catch (e) {
-                showError(e.message || '请求失败');
+                if (currentId === convId) {
+                    showError(e.message || '请求失败');
+                }
             } finally {
-                setLoading(false);
+                setLoading(convId, false);
             }
         }
 

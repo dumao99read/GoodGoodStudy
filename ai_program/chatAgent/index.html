@@ -19,9 +19,23 @@
             max-width: 98vw;
             height: 88vh;
             display: flex;
+            flex-direction: column;
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        .top-bar {
+            background: #4f46e5;
+            color: #fff;
+            padding: 14px 24px;
+            font-size: 17px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .app-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
         }
 
         /* sidebar */
@@ -119,7 +133,7 @@
         /* main */
         .main {
             flex: 1;
-            background: #fff;
+            background: #eef2ff;
             display: flex;
             flex-direction: column;
         }
@@ -236,27 +250,30 @@
 </head>
 <body>
     <div class="app">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h2>对话列表</h2>
-                <button class="btn-new" onclick="newConversation()">+ 新建</button>
+        <div class="top-bar">聊天Agent</div>
+        <div class="app-body">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h2>对话列表</h2>
+                    <button class="btn-new" onclick="newConversation()">+ 新建</button>
+                </div>
+                <div class="conversation-list" id="convList"></div>
             </div>
-            <div class="conversation-list" id="convList"></div>
-        </div>
 
-        <!-- Main -->
-        <div class="main">
-            <div class="chat-header">
-                <h3 id="chatTitle">AI 问答</h3>
-                <span class="msg-count" id="msgCount"></span>
-            </div>
-            <div class="messages" id="messages"></div>
-            <div class="loading" id="loading">AI 思考中...</div>
-            <div class="error-box" id="errorBox"></div>
-            <div class="input-area">
-                <textarea id="question" rows="1" placeholder="请输入你的问题..." onkeydown="handleKeydown(event)" disabled></textarea>
-                <button id="sendBtn" onclick="sendQuestion()" disabled>发送</button>
+            <!-- Main -->
+            <div class="main">
+                <div class="chat-header">
+                    <h3 id="chatTitle">AI 问答</h3>
+                    <span class="msg-count" id="msgCount"></span>
+                </div>
+                <div class="messages" id="messages"></div>
+                <div class="loading" id="loading">AI 思考中...</div>
+                <div class="error-box" id="errorBox"></div>
+                <div class="input-area">
+                    <textarea id="question" rows="1" placeholder="请输入你的问题..." onkeydown="handleKeydown(event)" disabled></textarea>
+                    <button id="sendBtn" onclick="sendQuestion()" disabled>发送</button>
+                </div>
             </div>
         </div>
     </div>

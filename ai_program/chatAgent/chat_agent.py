@@ -254,7 +254,6 @@ def chat():
 
 if __name__ == "__main__":
     port = 5000
-    print(f"  Server started at: http://localhost:{port}")
-    print(f"  Access from network: http://0.0.0.0:{port}")
+    print(f"打开小程序，请访问网址: http://localhost:{port}")
     logging.info("Chat agent started")
     app.run(host="0.0.0.0", port=port, debug=False)

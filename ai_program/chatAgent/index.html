@@ -272,7 +272,7 @@
                 <div class="error-box" id="errorBox"></div>
                 <div class="input-area">
                     <textarea id="question" rows="1" placeholder="请输入你的问题..." onkeydown="handleKeydown(event)" disabled></textarea>
-                    <button id="sendBtn" onclick="sendQuestion()" disabled>发送</button>
+                    <button id="sendBtn" onclick="onSendOrStop()" disabled>发送</button>
                 </div>
             </div>
         </div>
@@ -283,6 +283,7 @@
         let conversations = [];
         let currentId = null;
         let loadingConvs = new Set();
+        let abortControllers = new Map();
 
         const convListEl = document.getElementById('convList');
         const messagesEl = document.getElementById('messages');
@@ -491,11 +492,17 @@
                 loadingConvs.add(convId);
             } else {
                 loadingConvs.delete(convId);
+                abortControllers.delete(convId);
             }
             const anyLoading = loadingConvs.size > 0;
             loadingEl.className = 'loading' + (anyLoading ? ' show' : '');
+            updateSendButton();
+        }
+
+        function updateSendButton() {
             const thisLoading = loadingConvs.has(currentId);
-            sendBtn.disabled = thisLoading || !currentId;
+            sendBtn.textContent = thisLoading ? '停止' : '发送';
+            sendBtn.disabled = !currentId;
             questionEl.disabled = thisLoading || !currentId;
         }
 
@@ -504,10 +511,29 @@
             if (msg) setTimeout(() => { if (errorBox.textContent === msg) errorBox.textContent = ''; }, 5000);
         }
 
+        function onSendOrStop() {
+            if (loadingConvs.has(currentId)) {
+                stopQuestion();
+            } else {
+                sendQuestion();
+            }
+        }
+
         function handleKeydown(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
+                if (loadingConvs.has(currentId)) return;
                 sendQuestion();
+            }
+        }
+
+        function stopQuestion() {
+            const convId = currentId;
+            if (!convId || !loadingConvs.has(convId)) return;
+
+            const controller = abortControllers.get(convId);
+            if (controller) {
+                controller.abort();
             }
         }
 
@@ -520,14 +546,17 @@
             questionEl.value = '';
             questionEl.style.height = 'auto';
             const convId = currentId;
+
+            const controller = new AbortController();
+            abortControllers.set(convId, controller);
             setLoading(convId, true);
 
             try {
                 const data = await api('/api/chat', {
                     method: 'POST',
                     body: JSON.stringify({ question, conversation_id: convId }),
+                    signal: controller.signal,
                 });
-                // only update UI if still viewing the same conversation
                 if (currentId === convId) {
                     addTempMessage('bot', data.answer);
                 }
@@ -538,6 +567,7 @@
                 }
                 renderSidebar();
             } catch (e) {
+                if (e.name === 'AbortError') return;
                 if (currentId === convId) {
                     showError(e.message || '请求失败');
                 }

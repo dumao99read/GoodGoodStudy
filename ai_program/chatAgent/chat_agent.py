@@ -73,7 +73,7 @@ def list_conversations():
             })
         except (json.JSONDecodeError, KeyError):
             continue
-    conversations.sort(key=lambda x: x["updated_at"], reverse=True)
+    conversations.sort(key=lambda x: x["created_at"], reverse=True)
     return conversations
 
 

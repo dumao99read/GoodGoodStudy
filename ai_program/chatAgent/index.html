@@ -535,9 +535,7 @@
                 const conv = conversations.find(c => c.id === convId);
                 if (conv) {
                     conv.message_count += 2;
-                    conv.updated_at = new Date().toISOString();
                 }
-                conversations.sort((a, b) => b.updated_at.localeCompare(a.updated_at));
                 renderSidebar();
             } catch (e) {
                 if (currentId === convId) {
